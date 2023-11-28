@@ -1,9 +1,12 @@
+import { useContext } from "react";
+import { ImgNameContext } from "../provider/ImgNameSrcContext";
+
 export const useCreateImgNameSrc = () => {
+    const { isImgNameSrc, setImgNameSrc } = useContext(ImgNameContext);
+
     const createImgNameSrc = (
         itemNumber: number,
-        targetAry: string[],
-        isImgNameSrc: string[],
-        setImgNameSrc: React.Dispatch<React.SetStateAction<string[]>>
+        targetAry: string[]
     ) => {
         const imgNameSrcBoxes: string[] = [];
         for (let i = 0; i < itemNumber; i++) {
