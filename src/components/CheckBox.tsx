@@ -1,12 +1,13 @@
-import { memo, FC, useCallback, ChangeEvent } from "react";
+import { memo, FC, useCallback, ChangeEvent, useContext } from "react";
+import { CheckItemsContext } from "../provider/CheckItemsContext";
 
 type checkBoxType = {
-    index: number,
-    isCheckItems: string[],
-    setCheckItems: React.Dispatch<React.SetStateAction<string[]>>
+    index: number
 }
 
-export const CheckBox: FC<checkBoxType> = memo(({ index, isCheckItems, setCheckItems }) => {
+export const CheckBox: FC<checkBoxType> = memo(({ index }) => {
+    const { isCheckItems, setCheckItems } = useContext(CheckItemsContext);
+
     const _checkedJudge = (inputEl: HTMLInputElement) => {
         if (inputEl.hasAttribute('checked')) {
             inputEl.removeAttribute('checked');
