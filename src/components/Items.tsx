@@ -1,25 +1,12 @@
-import { memo, useEffect, useContext } from "react"
+import { memo, useEffect, useContext, useState } from "react"
 import styled from "styled-components";
-import parse from 'html-react-parser';
-/**
- * 【html-react-parser】HTML文字列をReact要素に変換するツール
- * https://www.npmjs.com/package/html-react-parser
- * 
- * npm i html-react-parser
- * 
- * 参考サイト：https://www.engilaboo.com/react-html-parse/
-*/
-
 import { ImgNameContext } from "../provider/ImgNameSrcContext";
 import { CheckItemsContext } from "../provider/CheckItemsContext";
-import { ItemsContext } from "../provider/ItemsContext";
 import { ItemContent } from "./ItemContent";
 import { CheckBox } from "./CheckBox";
 import { LocalSaveCtrl } from "./LocalSaveCtrl";
+import { FavoriteItemContent } from "./FavoriteItemContent";
 import { useCreateImgNameSrc } from "../hooks/useCreateImgNameSrc";
-import { useSelectCheckedItems } from "../hooks/useSelectCheckedItems";
-import { useGetTargetImgNum } from "../hooks/useGetTargetImgNum";
-import { useRemoveItems } from "../hooks/useRemoveItems";
 
 export const Items = memo(() => {
     const dammy___txtForImgesAry = () => {
@@ -29,40 +16,26 @@ export const Items = memo(() => {
 
     const { isImgNameSrc } = useContext(ImgNameContext);
     const { isCheckItems } = useContext(CheckItemsContext);
-    const { isItems } = useContext(ItemsContext);
+    const [isCheckSaveData, setCheckSaveData] = useState<string[]>([]);
 
     const { createImgNameSrc } = useCreateImgNameSrc();
     useEffect(() => {
         const imgFileNames: string[] = dammy___txtForImgesAry();
         createImgNameSrc(15, imgFileNames);
+
+        const getLocalStorageItems: string | null = localStorage.getItem('localSaveBoxes');
+        if (getLocalStorageItems !== null) {
+            const SaveDateItems: string[] = JSON.parse(getLocalStorageItems);
+            setCheckSaveData((_prevCheckSaveData) => SaveDateItems);
+        }
     }, []);
-
-    const { inUseEffect_act_selectCheckedItems } = useSelectCheckedItems();
-    useEffect(() => inUseEffect_act_selectCheckedItems(), []);
-
-    const { GetTargetImgNum } = useGetTargetImgNum();
-
-    const { RemoveItems } = useRemoveItems();
 
     return (
         <ItemEls className="ItemEls">
-            {(isCheckItems.length > 0 || isItems.length > 0) &&
+            {(isCheckItems.length > 0 || isCheckSaveData.length > 0) &&
                 <>
                     <LocalSaveCtrl />
-                    <div className="itemsWrapper favorites">
-                        {isItems?.map((item, i) => (
-                            <div className="items favorites" key={i}>
-                                <ItemContent index={i} imgNameViewBool={true}>
-                                    {parse(item)}
-                                    <p>{GetTargetImgNum(item, 'items')}の画像</p>
-                                    <button className="removeItems" onClick={(btnEl) => {
-                                        btnEl.stopPropagation(); // 親要素の click イベント（viewDetails）の実行防止
-                                        RemoveItems(GetTargetImgNum(item, 'itemsOrigin'));
-                                    }}>お気に入り解除</button>
-                                </ItemContent>
-                            </div>
-                        ))}
-                    </div>
+                    <FavoriteItemContent />
                 </>
             }
             <div className="itemsWrapper defaults">
