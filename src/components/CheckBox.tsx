@@ -1,5 +1,4 @@
 import { memo, FC, ChangeEvent, useContext, useCallback } from "react";
-import { LocalStorageContext } from "../provider/LocalStorageContext";
 import { CheckItemsContext } from "../provider/CheckItemsContext";
 import { useGetTargetImgNum } from "../hooks/useGetTargetImgNum";
 import { useRemoveItems } from "../hooks/useRemoveItems";
@@ -11,7 +10,6 @@ type checkBoxType = {
 }
 
 export const CheckBox: FC<checkBoxType> = memo(({ index }) => {
-    const { localSaveBoxes } = useContext(LocalStorageContext);
     const { isCheckItems, setCheckItems } = useContext(CheckItemsContext);
 
     const { _pushLocalSaveBoxes } = usePushLocalSaveBoxes();
@@ -23,14 +21,6 @@ export const CheckBox: FC<checkBoxType> = memo(({ index }) => {
         const parentEl: HTMLDivElement | null = inputEl.closest('.items');
         const itemsOriginContent = parentEl?.querySelector('.itemsOrigin')?.innerHTML as string;
         RemoveItems(GetTargetImgNum(itemsOriginContent, 'itemsOrigin'));
-
-
-        
-        const getLocalStorageItems: string | null = localStorage.getItem('localSaveBoxes');
-        if (getLocalStorageItems !== null) {
-            const SaveDateItems: string[] = JSON.parse(getLocalStorageItems);
-            console.log(SaveDateItems);
-        }
     }
 
     const foo = () => {
@@ -38,22 +28,6 @@ export const CheckBox: FC<checkBoxType> = memo(({ index }) => {
         // console.log(checkedItemId);
         // const findCheckedItemId: string | undefined = isCheckItems.find(checkItems => checkItems.match(checkedItemId));
         // console.log(findCheckedItemId);
-    }
-
-    const _hoge = (
-        SaveDateItems: string[],
-        inputEl: HTMLInputElement
-    ) => {
-        const parentEl: HTMLDivElement | null = inputEl.closest('.items');
-        const itemsOriginContent = parentEl?.querySelector('.itemsOrigin')?.innerHTML as string;
-        const findItems = SaveDateItems.find(SaveDateItem => SaveDateItem === itemsOriginContent) as string;
-        const targetIndex = SaveDateItems.indexOf(findItems);
-        const shallowCopy = [...SaveDateItems];
-        shallowCopy.splice(targetIndex, 1);
-        console.log(SaveDateItems, targetIndex, shallowCopy);
-
-        _pushLocalSaveBoxes(shallowCopy);
-        _localSaved('localSaveBoxes', localSaveBoxes);
     }
 
     const _checkedJudge = (inputEl: HTMLInputElement) => {
@@ -81,6 +55,9 @@ export const CheckBox: FC<checkBoxType> = memo(({ index }) => {
     }
 
     const checkItems = useCallback((labelEl: HTMLLabelElement) => {
+        const checkedItems: NodeListOf<HTMLElement> = document.querySelectorAll('[checked]');
+        console.log(...checkedItems);
+
         const inputEl: HTMLInputElement | null = labelEl.querySelector('input[type="checkbox"]');
         const checkedItemId = inputEl?.getAttribute('id') as string; // 型アサーション：型推論の上書き
 
