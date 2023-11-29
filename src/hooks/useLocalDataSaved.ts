@@ -6,12 +6,23 @@ import { useLocalSaved } from "./useLocalSaved";
 import { usePushLocalSaveBoxes } from "./usePushLocalSaveBoxes";
 
 export const useLocalDataSaved = () => {
-    const { localSaveBoxes } = useContext(LocalStorageContext)
+    const { localSaveBoxes, checkedLists } = useContext(LocalStorageContext)
     const { isCheckItems } = useContext(CheckItemsContext);
 
     const { GetTargetImgNum } = useGetTargetImgNum();
     const { _pushLocalSaveBoxes } = usePushLocalSaveBoxes();
     const { _localSaved } = useLocalSaved();
+
+
+    const _setCheckedLists = () => {
+        const checkedItems: NodeListOf<HTMLElement> = document.querySelectorAll('[checked]');
+        if (checkedItems.length > 0) {
+            checkedItems.forEach(checkedItem => {
+                checkedLists.push(checkedItem.getAttribute('id') as string);
+                localStorage.setItem('checkedLists', JSON.stringify(checkedLists));
+            });
+        }
+    }
 
     const _getSpecificItems = (targetAry: string[]) => {
         const itemContents: NodeListOf<HTMLDivElement> = document.querySelectorAll('.itemsOrigin');
@@ -51,6 +62,8 @@ export const useLocalDataSaved = () => {
                     _pushLocalSaveBoxes(itemsOriginStrs);
                     _localSaved('localSaveBoxes', localSaveBoxes);
                 }
+
+                // _setCheckedLists();
             }
         }
 
@@ -58,6 +71,7 @@ export const useLocalDataSaved = () => {
         else {
             _getSpecificItems(isCheckItems);
             _localSaved('localSaveBoxes', localSaveBoxes);
+            // _setCheckedLists();
         }
     }
 

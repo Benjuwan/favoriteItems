@@ -2,8 +2,6 @@ import { memo, FC, ChangeEvent, useContext, useCallback } from "react";
 import { CheckItemsContext } from "../provider/CheckItemsContext";
 import { useGetTargetImgNum } from "../hooks/useGetTargetImgNum";
 import { useRemoveItems } from "../hooks/useRemoveItems";
-import { usePushLocalSaveBoxes } from "../hooks/usePushLocalSaveBoxes";
-import { useLocalSaved } from "../hooks/useLocalSaved";
 
 type checkBoxType = {
     index: number
@@ -11,9 +9,6 @@ type checkBoxType = {
 
 export const CheckBox: FC<checkBoxType> = memo(({ index }) => {
     const { isCheckItems, setCheckItems } = useContext(CheckItemsContext);
-
-    const { _pushLocalSaveBoxes } = usePushLocalSaveBoxes();
-    const { _localSaved } = useLocalSaved();
 
     const { GetTargetImgNum } = useGetTargetImgNum();
     const { RemoveItems } = useRemoveItems();
@@ -23,12 +18,19 @@ export const CheckBox: FC<checkBoxType> = memo(({ index }) => {
         RemoveItems(GetTargetImgNum(itemsOriginContent, 'itemsOrigin'));
     }
 
-    const foo = () => {
-        // const checkedItemId = GetTargetImgNum(itemsOriginContent, 'item-');
-        // console.log(checkedItemId);
-        // const findCheckedItemId: string | undefined = isCheckItems.find(checkItems => checkItems.match(checkedItemId));
-        // console.log(findCheckedItemId);
+    const hoge = () => {
+        const checkedItems: NodeListOf<HTMLElement> = document.querySelectorAll('[checked]');
+        checkedItems.forEach(checkedItem => {
+            console.log(checkedItem);
+            const parentEl: HTMLDivElement | null = checkedItem.closest('.items');
+            const itemsOriginContent = parentEl?.querySelector('.itemsOrigin')?.innerHTML as string;
+            const checkedItemId = GetTargetImgNum(itemsOriginContent, 'item-');
+            console.log(checkedItemId);
+            const findCheckedItemId: string | undefined = isCheckItems.find(checkItems => checkItems.match(checkedItemId));
+            console.log(findCheckedItemId);
+        });
     }
+    hoge();
 
     const _checkedJudge = (inputEl: HTMLInputElement) => {
         if (inputEl.hasAttribute('checked')) {
@@ -55,9 +57,6 @@ export const CheckBox: FC<checkBoxType> = memo(({ index }) => {
     }
 
     const checkItems = useCallback((labelEl: HTMLLabelElement) => {
-        const checkedItems: NodeListOf<HTMLElement> = document.querySelectorAll('[checked]');
-        console.log(...checkedItems);
-
         const inputEl: HTMLInputElement | null = labelEl.querySelector('input[type="checkbox"]');
         const checkedItemId = inputEl?.getAttribute('id') as string; // 型アサーション：型推論の上書き
 
