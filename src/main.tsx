@@ -9,24 +9,15 @@ import { ImgNameFragment } from './provider/ImgNameSrcContext.tsx'
 import { CheckItemsFragment } from './provider/CheckItemsContext.tsx'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  // <React.StrictMode>
-  //   <LocalStorageFragment>
-  //     <ItemsFragment>
-  //       <ImgNameFragment>
-  //         <CheckItemsFragment>
-  //           <App />
-  //         </CheckItemsFragment>
-  //       </ImgNameFragment>
-  //     </ItemsFragment>
-  //   </LocalStorageFragment>
-  // </React.StrictMode>,
-  <LocalStorageFragment>
-    <ItemsFragment>
-      <ImgNameFragment>
-        <CheckItemsFragment>
-          <App />
-        </CheckItemsFragment>
-      </ImgNameFragment>
-    </ItemsFragment>
-  </LocalStorageFragment>
+  <React.StrictMode>
+    <LocalStorageFragment>
+      <ItemsFragment>
+        <ImgNameFragment>
+          <CheckItemsFragment>
+            <App />
+          </CheckItemsFragment>
+        </ImgNameFragment>
+      </ItemsFragment>
+    </LocalStorageFragment>
+  </React.StrictMode>,
 )
