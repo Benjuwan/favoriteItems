@@ -9,7 +9,7 @@ export const useLocalSaved = () => {
         localSaveBoxes: string[]
     ) => {
         const newSetLocalSaveBoxes = Array.from(new Set([...localSaveBoxes]));
-        console.log(localSaveBoxes, newSetLocalSaveBoxes);
+        // console.log(localSaveBoxes, newSetLocalSaveBoxes);
         localStorage.setItem(localSaveStr, JSON.stringify(newSetLocalSaveBoxes));
         setItems((_prevItems) => newSetLocalSaveBoxes);
     }
