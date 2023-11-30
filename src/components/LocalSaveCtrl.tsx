@@ -27,19 +27,44 @@ export const LocalSaveCtrl = memo(() => {
         }
     }, [isCheckItems]);
 
+    useEffect(() => {
+        const getLocalStorageItems: string | null = localStorage.getItem('localSaveBoxes');
+        /* 既存の localStorage データが存在かつ、選択コンテンツが無くなったタイミングで 既存の localStorage データをリセット */
+        // if (getLocalStorageItems && isCheckSaveData.length === 0) ResetAllFavorite();
+    }, [isItems]);
+
+    const check_checkedContents = (
+        itemsOriginContent: string
+    ) => {
+        const checkedContents: NodeListOf<HTMLDivElement> = document.querySelectorAll('.checkedContent');
+        if (checkedContents.length > 0) {
+            const itemsOrigin: string[] = Array.from(checkedContents).map(checkedContent => {
+                const itemsOrigin_innerHTML = checkedContent.querySelector('.itemsOrigin')?.innerHTML as string; // メモ：isItem の中身が .itemOrigin
+                return itemsOrigin_innerHTML;
+            });
+            const getTargetItems: string[] = [...itemsOrigin, itemsOriginContent];
+            return getTargetItems;
+        }
+    }
+
     const _setLocalStorage_Favorite = () => {
-        /* localStorage データがある場合は checked = 'true' の内容のみ localStorage に保存 */
         const checkedItems: NodeListOf<HTMLElement> = document.querySelectorAll('[checked]');
         checkedItems.forEach(checkedItem => {
             const parentEl: HTMLDivElement | null = checkedItem.closest('.items');
             const itemsOriginContent = parentEl?.querySelector('.itemsOrigin')?.innerHTML as string; // 型アサーション：型推論の上書き
-            _pushLocalSaveBoxes(itemsOriginContent);
+            const getTargetItems = check_checkedContents(itemsOriginContent) as string[];
+            console.log(getTargetItems);
+            _pushLocalSaveBoxes(getTargetItems);
             _localSaved('localSaveBoxes', localSaveBoxes);
+
+            // _pushLocalSaveBoxes(itemsOriginContent);
+            // _localSaved('localSaveBoxes', localSaveBoxes);
         });
     }
 
     const localDataSave_Favorite = () => {
-        if (isCheckSaveData.length >= 0) {
+        if (isCheckSaveData.length > 0) {
+            /* localStorage データがある場合は checked = 'true' の内容のみ localStorage に保存 */
             _setLocalStorage_Favorite();
             location.reload();
         } else {

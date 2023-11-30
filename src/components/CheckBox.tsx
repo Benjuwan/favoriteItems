@@ -1,5 +1,6 @@
 import { memo, FC, ChangeEvent, useContext } from "react";
 import { CheckItemsContext } from "../provider/CheckItemsContext";
+import { ImgNameContext } from "../provider/ImgNameSrcContext";
 import { useGetTargetImgNum } from "../hooks/useGetTargetImgNum";
 import { useRemoveItems } from "../hooks/useRemoveItems";
 
@@ -9,6 +10,7 @@ type checkBoxType = {
 
 export const CheckBox: FC<checkBoxType> = memo(({ index }) => {
     const { isCheckItems, setCheckItems } = useContext(CheckItemsContext);
+    const { isImgNameSrc } = useContext(ImgNameContext);
 
     const { GetTargetImgNum } = useGetTargetImgNum();
     const { RemoveItems } = useRemoveItems();
@@ -63,6 +65,6 @@ export const CheckBox: FC<checkBoxType> = memo(({ index }) => {
     return (
         <label htmlFor={`item-${index + 1}`} onChange={(labelEl: ChangeEvent<HTMLLabelElement>) => {
             checkItems(labelEl.currentTarget);
-        }}><input id={`item-${index + 1}`} type="checkbox" />{`item-${index + 1}`}</label>
+        }}><input id={`item-${index + 1}`} type="checkbox" />{`No.${index + 1}：${isImgNameSrc[index]}の画像`}</label>
     );
 });
