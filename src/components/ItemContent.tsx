@@ -5,15 +5,13 @@ import { useViewDetails } from "../hooks/useViewDetails";
 type itemContentType = {
     index: number,
     imgNameSrc?: string,
-    children?: ReactNode,
-    imgNameViewBool?: boolean
+    children?: ReactNode
 }
 
 export const ItemContent: FC<itemContentType> = memo(({
     imgNameSrc,
     index,
-    children,
-    imgNameViewBool = false
+    children
 }) => {
     const dammy___imgSrcPath = (item: string) => `https://via.placeholder.com/640x360/333/fff?text=${item}`;
 
@@ -23,15 +21,13 @@ export const ItemContent: FC<itemContentType> = memo(({
         <ItemContents id={`items-${index + 1}`} className="itemContents" onClick={(itemEl) => {
             viewDetails(itemEl.currentTarget, 'OnView');
         }}>
-            <>{imgNameViewBool === false ?
-                <>{imgNameSrc &&
-                    <div className="itemsOrigin" id={`itemsOrigin-${index + 1}`}>
+            <>{imgNameSrc ?
+                <div className="itemsOrigin" id={`itemsOrigin-${index + 1}`}>
+                    <img src={dammy___imgSrcPath(imgNameSrc)} alt={`itemsOrigin-${index + 1}：${imgNameSrc}の画像`} />
+                    <div className="hiddenArea">
                         <img src={dammy___imgSrcPath(imgNameSrc)} alt={`itemsOrigin-${index + 1}：${imgNameSrc}の画像`} />
-                        <div className="hiddenArea">
-                            <img src={dammy___imgSrcPath(imgNameSrc)} alt={`itemsOrigin-${index + 1}：${imgNameSrc}の画像`} />
-                        </div>
                     </div>
-                }</> :
+                </div> :
                 <>{children}</>
             }</>
         </ItemContents>

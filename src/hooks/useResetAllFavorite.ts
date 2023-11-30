@@ -10,16 +10,7 @@ export const useResetAllFavorite = () => {
         const getLocalStorageItems = localStorage.getItem('localSaveBoxes');
         if (getLocalStorageItems !== null) localStorage.removeItem('localSaveBoxes');
         setItems((_prevItems) => []);
-
         setCheckItems((_prevCheckitems) => []);
-
-        /* setTimeout による（タスクキューの）疑似的な遅延・非同期処理 */
-        setTimeout(() => {
-            const checkedItems: NodeListOf<HTMLElement> = document.querySelectorAll('[checked]');
-            checkedItems.forEach(checkedItem => {
-                if (checkedItem.hasAttribute('checked')) checkedItem.removeAttribute('checked');
-            });
-        }, 1);
     }
 
     return { ResetAllFavorite }
