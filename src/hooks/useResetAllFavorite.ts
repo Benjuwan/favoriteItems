@@ -11,6 +11,7 @@ export const useResetAllFavorite = () => {
         if (getLocalStorageItems !== null) localStorage.removeItem('localSaveBoxes');
         setItems((_prevItems) => []);
         setCheckItems((_prevCheckitems) => []);
+        location.reload();
     }
 
     return { ResetAllFavorite }

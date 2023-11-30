@@ -2,7 +2,6 @@ import { memo, FC, ChangeEvent, useContext } from "react";
 import { CheckItemsContext } from "../provider/CheckItemsContext";
 import { useGetTargetImgNum } from "../hooks/useGetTargetImgNum";
 import { useRemoveItems } from "../hooks/useRemoveItems";
-import { useResetAllFavorite } from "../hooks/useResetAllFavorite";
 
 type checkBoxType = {
     index: number
@@ -13,21 +12,11 @@ export const CheckBox: FC<checkBoxType> = memo(({ index }) => {
 
     const { GetTargetImgNum } = useGetTargetImgNum();
     const { RemoveItems } = useRemoveItems();
-    const { ResetAllFavorite } = useResetAllFavorite();
 
     const _removeItems = (inputEl: HTMLInputElement) => {
         const parentEl: HTMLDivElement | null = inputEl.closest('.items');
         const itemsOriginContent = parentEl?.querySelector('.itemsOrigin')?.innerHTML as string;
         RemoveItems(GetTargetImgNum(itemsOriginContent, 'itemsOrigin'));
-    }
-
-    const _addClass_checkedContent = () => {
-        const checkedItems: NodeListOf<HTMLElement> = document.querySelectorAll('[checked]');
-        checkedItems.forEach(checkedItem => {
-            const parentEl: HTMLDivElement | null = checkedItem.closest('.items');
-            const itemsOriginContent: HTMLDivElement | undefined | null = parentEl?.querySelector('.itemsOrigin');
-            itemsOriginContent?.classList.add('checkedContent');
-        });
     }
 
     const _checkedJudge = (inputEl: HTMLInputElement) => {
@@ -41,28 +30,19 @@ export const CheckBox: FC<checkBoxType> = memo(({ index }) => {
 
     const _onTime_removeCheckItems = (
         isFindCheckedItemId: boolean,
-        findCheckedItemId: string,
-        checkedItemId?: string
+        find_checked_CheckedItemId: string
     ) => {
         if (isFindCheckedItemId === true) {
-            const targetIndex: number = isCheckItems.indexOf(findCheckedItemId);
+            const targetIndex: number = isCheckItems.indexOf(find_checked_CheckedItemId);
             const shallowCopy: string[] = [...isCheckItems];
             shallowCopy.splice(targetIndex, 1);
             setCheckItems((_prevCheckItems) => [...shallowCopy]);
         } else {
-            if (checkedItemId !== undefined) setCheckItems((_prevCheckItems) => [...isCheckItems, checkedItemId]);
+            if (find_checked_CheckedItemId !== undefined) setCheckItems((_prevCheckItems) => [...isCheckItems, find_checked_CheckedItemId]);
         }
     }
 
     const checkItems = (labelEl: HTMLLabelElement) => {
-        _addClass_checkedContent();
-
-        const getLocalStorageItems: string | null = localStorage.getItem('localSaveBoxes');
-        if (getLocalStorageItems !== null && isCheckItems.length <= 0) {
-            const SaveDateItems: string[] = JSON.parse(getLocalStorageItems);
-            // if (SaveDateItems.length <= 1) ResetAllFavorite();
-        }
-
         const inputEl: HTMLInputElement | null = labelEl.querySelector('input[type="checkbox"]');
         const checkedItemId = inputEl?.getAttribute('id') as string; // 型アサーション：型推論の上書き
 
@@ -73,10 +53,10 @@ export const CheckBox: FC<checkBoxType> = memo(({ index }) => {
             const findCheckedItemId: string | undefined = isCheckItems.find(checkItems => checkItems.match(checkedItemId));
             if (typeof findCheckedItemId !== "undefined") {
                 if (inputEl !== null) _checkedJudge(inputEl);
-                _onTime_removeCheckItems(true, checkedItemId);
+                _onTime_removeCheckItems(true, findCheckedItemId);
             } else {
                 if (inputEl !== null) _checkedJudge(inputEl);
-                _onTime_removeCheckItems(false, checkedItemId, checkedItemId);
+                _onTime_removeCheckItems(false, checkedItemId);
             }
         }
     }

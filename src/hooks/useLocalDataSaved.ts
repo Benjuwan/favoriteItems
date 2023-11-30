@@ -1,7 +1,6 @@
 import { useContext } from "react";
 import { LocalStorageContext } from "../provider/LocalStorageContext";
 import { CheckItemsContext } from "../provider/CheckItemsContext";
-import { useGetTargetImgNum } from "./useGetTargetImgNum";
 import { useLocalSaved } from "./useLocalSaved";
 import { usePushLocalSaveBoxes } from "./usePushLocalSaveBoxes";
 
@@ -9,7 +8,6 @@ export const useLocalDataSaved = () => {
     const { localSaveBoxes } = useContext(LocalStorageContext)
     const { isCheckItems } = useContext(CheckItemsContext);
 
-    const { GetTargetImgNum } = useGetTargetImgNum();
     const { _pushLocalSaveBoxes } = usePushLocalSaveBoxes();
     const { _localSaved } = useLocalSaved();
 
@@ -32,12 +30,6 @@ export const useLocalDataSaved = () => {
         if (getLocalStorageItems !== null) {
             const SaveDateItems: string[] = JSON.parse(getLocalStorageItems);
             if (SaveDateItems.length > 0) {
-                const currCheckedItems = SaveDateItems.map(item => GetTargetImgNum(item, 'item'));
-                const notSameItems = isCheckItems.filter(checkItem => {
-                    return currCheckedItems.filter(currCheckedItem => checkItem !== currCheckedItem);
-                });
-                console.log(notSameItems);
-
                 const checkedItems: NodeListOf<HTMLElement> = document.querySelectorAll('[checked]');
                 if (checkedItems.length > 0) {
                     const itemsOriginStrs: string[] = [];
