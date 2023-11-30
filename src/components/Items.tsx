@@ -1,11 +1,9 @@
 import { memo, useEffect, useContext, useState } from "react"
 import styled from "styled-components";
-import { ImgNameContext } from "../provider/ImgNameSrcContext";
 import { CheckItemsContext } from "../provider/CheckItemsContext";
-import { ItemContent } from "./ItemContent";
-import { CheckBox } from "./CheckBox";
 import { LocalSaveCtrl } from "./LocalSaveCtrl";
 import { FavoriteItemContent } from "./FavoriteItemContent";
+import { DefaultItemContent } from "./DefaultItemContent";
 import { useCreateImgNameSrc } from "../hooks/useCreateImgNameSrc";
 
 export const Items = memo(() => {
@@ -14,8 +12,8 @@ export const Items = memo(() => {
         return txtElement.split(' ');
     }
 
-    const { isImgNameSrc } = useContext(ImgNameContext);
     const { isCheckItems } = useContext(CheckItemsContext);
+
     const [isCheckSaveData, setCheckSaveData] = useState<string[]>([]);
 
     const { createImgNameSrc } = useCreateImgNameSrc();
@@ -38,14 +36,7 @@ export const Items = memo(() => {
                     <FavoriteItemContent />
                 </>
             }
-            <div className="itemsWrapper defaults">
-                {isImgNameSrc.map((imgNameSrc, i) => (
-                    <div className="items" key={i}>
-                        <ItemContent imgNameSrc={imgNameSrc} index={i} />
-                        <CheckBox index={i} />
-                    </div>
-                ))}
-            </div>
+            <DefaultItemContent />
         </ItemEls>
     );
 });

@@ -29,7 +29,7 @@ export const FavoriteItemContent = memo(() => {
         <div className="itemsWrapper favorites">
             {isItems?.map((item, i) => (
                 <div className="items favorites" key={i}>
-                    <ItemContent index={i} imgNameViewBool={true}>
+                    <ItemContent index={i}>
                         {parse(item)}
                         <p>{GetTargetImgNum(item, 'items')}の画像</p>
                         <button className="removeItems" onClick={(btnEl) => {
