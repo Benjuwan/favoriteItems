@@ -46,7 +46,9 @@ export const FavoriteItemContent = memo(() => {
                         <button className="removeItems" onClick={(btnEl) => {
                             btnEl.stopPropagation(); // 親要素の click イベント（viewDetails）の実行防止
                             RemoveItems(GetTargetImgNum(item, 'itemsOrigin'));
-                            { isCheckSaveData.length <= 1 && ResetAllFavorite }
+                            {
+                                isCheckSaveData.length <= 1 && ResetAllFavorite(); // ラストワンのタイミングで 既存の localStorage データをリセット
+                            }
                         }}>お気に入り解除</button>
                     </ItemContent>
                 </div>
