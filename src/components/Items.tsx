@@ -14,6 +14,7 @@ export const Items = memo(() => {
 
     const { isCheckItems } = useContext(CheckItemsContext);
 
+    /* 既存の localStorage データ State */
     const [isCheckSaveData, setCheckSaveData] = useState<string[]>([]);
 
     const { createImgNameSrc } = useCreateImgNameSrc();
@@ -21,6 +22,7 @@ export const Items = memo(() => {
         const imgFileNames: string[] = dammy___txtForImgesAry();
         createImgNameSrc(15, imgFileNames);
 
+        /* 既存の localStorage データを State に格納 */
         const getLocalStorageItems: string | null = localStorage.getItem('localSaveBoxes');
         if (getLocalStorageItems !== null) {
             const SaveDateItems: string[] = JSON.parse(getLocalStorageItems);
@@ -105,6 +107,14 @@ padding: 0 2.5em;
         width: 48%;
         margin-bottom: 2%;
         line-height: 1.8;
+        padding: .5em;
+        border-radius: 4px;
+        background-color: #eaeaea;
+
+        &.checkedContent {
+            color: #fff;
+            background-color: #666666;
+        }
 
         @media screen and (min-width: 700px) {
             width: 32%;

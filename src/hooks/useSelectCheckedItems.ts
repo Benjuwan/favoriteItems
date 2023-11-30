@@ -21,8 +21,9 @@ export const useSelectCheckedItems = () => {
         });
         setCheckItems((_prevCheckitems) => selectCheckedItems);
 
-        const items: NodeListOf<HTMLDivElement> = document.querySelectorAll('.defaults .items');
+        const items: NodeListOf<HTMLDivElement> = document.querySelectorAll('.defaultWrapper .items');
         items.forEach(item => {
+            item.classList.remove('checkedContent'); // 初期化（checkedContent を削除）
             const itemImgAltTxt: string | null | undefined = item.querySelector('img')?.getAttribute('alt');
             selectCheckedItems.forEach(selectCheckedItem => {
                 if (itemImgAltTxt?.match(selectCheckedItem)) {
@@ -31,8 +32,7 @@ export const useSelectCheckedItems = () => {
                         _pushLocalSaveBoxes(itemsOrigin?.innerHTML);
                         _localSaved('localSaveBoxes', localSaveBoxes);
                     }
-                    // const itemTargetInputEl = item.querySelector('input[type="checkbox"]');
-                    // itemTargetInputEl?.setAttribute('checked', 'true');
+                    item.classList.toggle('checkedContent');
                 }
             });
         });

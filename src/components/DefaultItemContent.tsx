@@ -29,7 +29,7 @@ export const DefaultItemContent = memo(() => {
     }, [isCheckItems]);
 
     return (
-        <div className="itemsWrapper defaults">
+        <div className="itemsWrapper defaultWrapper">
             {/* {isAdjustItems.length > 0 ?
                 <>{isAdjustItems.map((Adjust_imgNameSrc, i) => (
                     <div className="items" key={i}>
