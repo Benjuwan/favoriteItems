@@ -37,15 +37,27 @@ export const FavoriteItemContent = memo(() => {
     /* useSelectCheckedItems.ts：登録されている localStorage データを呼び出して、.defaultWrapper のコンテンツに反映する処理 */
     useEffect(() => inUseEffect_act_selectCheckedItems(), []);
 
+    /* お気に入り解除したコンテンツと合致する一覧コンテンツから checkedContent クラスを削除 */
+    const _removeClassName_CheckedContent = (btnEl: HTMLButtonElement) => {
+        const removeItem_imgName: string | undefined | null = btnEl.closest('.favorites')?.querySelector('#itemName')?.textContent;
+        const removeItem_targetImgName: string | undefined = removeItem_imgName?.split('：')[0];
+        const defaultItems_checkedContents: NodeListOf<HTMLDivElement> = document.querySelectorAll('.defaultWrapper .checkedContent');
+        defaultItems_checkedContents.forEach(defaultItems_checkedContent => {
+            const targetEl_idAttr = defaultItems_checkedContent.querySelector('.itemContents')?.getAttribute('id') as string; // 型アサーション：型推論の上書き
+            if (targetEl_idAttr === removeItem_targetImgName) defaultItems_checkedContent.classList.remove('checkedContent');
+        });
+    }
+
     return (
         <div className="itemsWrapper favoriteWrapper">
             {isItems?.map((item, i) => (
                 <div className="items favorites" key={i}>
                     <ItemContent index={i}>
                         {parse(item)}
-                        <p>{GetTargetImgNum(item, 'items')}の画像</p>
+                        <p id="itemName">{GetTargetImgNum(item, 'items')}</p>
                         <button className="removeItems" onClick={(btnEl) => {
                             btnEl.stopPropagation(); // 親要素の click イベント（viewDetails）の実行防止
+                            _removeClassName_CheckedContent(btnEl.currentTarget);
                             RemoveItems(GetTargetImgNum(item, 'itemsOrigin'));
                             {
                                 isCheckSaveData.length <= 1 && ResetAllFavorite(); // ラストワンのタイミングで 既存の localStorage データをリセット

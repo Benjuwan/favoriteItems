@@ -1,8 +1,22 @@
 # favoriteItems
-- 20231125 - 20231130
+- 制作期間：20231125 - 20231130
+
+- 公開サイト：https://k2webservice.xsrv.jp/r0105/favoriteitems/
 
 ## 概要 
-`localstorage`を使ったお気に入りアイテム（画像）の登録機能
+`localstorage`を使ったお気に入りアイテム（画像）の登録機能<br />
+
+- 用意した画像を使用したい場合（デフォルトでは下記機能は無効）<br />
+1：`ItemContent.tsx`の`createImgNameSrc_alt`変数を`true`に切り替える。<br />
+2：`Items.tsx`で`createImgNameSrc`メソッドを削除（またはコメントアウトで無効化）して、その代わりに`createImgNameSrc_alt`メソッドを使用する（引数には用意した**画像の枚数**を指定）。
+
+## 注意事項
+- `vite.config.ts`の設定
+ホスティング先の都合上`vite.config.ts`でサブディレクトリを指定しているので、`vite.config.ts`内の下記記述を削除（またはコメントアウトで無効化）してください。
+
+```
+base: '/r0105/favoriteitems',
+```
 
 ## LocalStorage
 `Google Dev Tool`の`Application` - `Storage` - `Local Storage`で自身のユーザーエージェント（クライアント：サイト閲覧時のブラウザ）に保存されている`localStorage`データの確認・編集が可能
