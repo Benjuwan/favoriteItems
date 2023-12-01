@@ -72,6 +72,15 @@ padding: 0 2.5em;
     border: 1px solid transparent;
     border-radius: 4px;
 
+    &.localDataSave {
+        background-color: #0a2aa9;
+    }
+
+    &.removeItems,
+    &.resetAllFavorite {
+        background-color: #a90a0a;
+    }
+
     &[disabled] {
         cursor: default;
         background-color: #eaeaea;
@@ -83,15 +92,6 @@ padding: 0 2.5em;
         color: #333;
         background-color: #fff;
     }
-
-    /* &.localDataSave {
-        background-color: #0a2aa9;
-    }
-
-    &.removeItems,
-    &.resetAllFavorite {
-        background-color: #a90a0a;
-    } */
 }
 
 & .itemsWrapper {
@@ -117,12 +117,46 @@ padding: 0 2.5em;
             background-color: #666666;
         }
 
+        & label {
+            cursor: pointer;
+            line-height: 2;
+            
+            &:hover {
+                font-weight: bold;
+            }
+
+            & input[type="checkbox"] {
+                appearance: none;
+                border-radius: 0;
+                border: 1px solid transparent;
+                background-color: transparent;
+
+                &[checked] {
+                    appearance: auto;
+                }
+            }
+        }
+
         @media screen and (min-width: 700px) {
             width: 32%;
         }
 
         & img {
             display: block;
+            cursor: pointer;
+            
+            &:hover {
+                filter: sepia(1)
+            }
+        }
+        
+        & .hiddenArea {
+            & img {
+                cursor: default;
+                &:hover {
+                    filter: unset;
+                }
+            }
         }
     }
 }
