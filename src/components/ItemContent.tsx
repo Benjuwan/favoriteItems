@@ -13,7 +13,16 @@ export const ItemContent: FC<itemContentType> = memo(({
     index,
     children
 }) => {
-    const dammy___imgSrcPath = (item: string) => `https://via.placeholder.com/640x360/333/fff?text=${item}`;
+    const createImgNameSrc_alt: boolean = false; // 用意した画像を使用する場合は true に変更
+    const setImgSrcPath = (imgNameSrc: string) => {
+        if (createImgNameSrc_alt) {
+            /* 本環境（デプロイ）時は /public を取る */
+            return `${location.origin}/public/imges/${imgNameSrc}.jpg`;
+            // return `${location.origin}/r0105/favoriteitems/imges/${imgNameSrc}.jpg`;
+        } else {
+            return `https://via.placeholder.com/640x360/333/fff?text=${imgNameSrc}`;
+        }
+    }
 
     const { viewDetails } = useViewDetails();
 
@@ -26,9 +35,9 @@ export const ItemContent: FC<itemContentType> = memo(({
         }}>
             <>{imgNameSrc ?
                 <div className="itemsOrigin" id={`itemsOrigin-${index + 1}`}>
-                    <img src={dammy___imgSrcPath(imgNameSrc)} alt={`itemsOrigin-${index + 1}：${imgNameSrc}の画像`} />
+                    <p className="thumbnails"><img src={setImgSrcPath(imgNameSrc)} alt={`itemsOrigin-${index + 1}：${imgNameSrc}の画像`} /></p>
                     <div className="hiddenArea">
-                        <img src={dammy___imgSrcPath(imgNameSrc)} alt={`itemsOrigin-${index + 1}：${imgNameSrc}の画像`} />
+                        <img src={setImgSrcPath(imgNameSrc)} alt={`itemsOrigin-${index + 1}：${imgNameSrc}の画像`} />
                     </div>
                 </div> :
                 <>{children}</>

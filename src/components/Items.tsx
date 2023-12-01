@@ -17,11 +17,12 @@ export const Items = memo(() => {
     /* 既存の localStorage データ State */
     const [isCheckSaveData, setCheckSaveData] = useState<string[]>([]);
 
-    const { createImgNameSrc } = useCreateImgNameSrc();
+    const { createImgNameSrc, createImgNameSrc_alt } = useCreateImgNameSrc();
     useEffect(() => {
         /* dammy___txtForImgesAry メソッドを通じてダミー画像を生成 */
         const imgFileNames: string[] = dammy___txtForImgesAry();
         createImgNameSrc(15, imgFileNames);
+        // createImgNameSrc_alt(65); // 引数には用意した画像の枚数を指定
 
         /* 既存の localStorage データを State に格納 */
         const getLocalStorageItems: string | null = localStorage.getItem('localSaveBoxes');
@@ -122,6 +123,23 @@ padding: 0 2.5em;
             background-color: #666666;
         }
 
+        & img {
+            display: block;
+        }
+
+        & .thumbnails {
+            overflow: hidden;
+
+            & img {
+                cursor: pointer;
+                transition: transform .25s;
+                
+                &:hover {
+                    transform: scale(1.1);
+                }
+            }
+        }
+
         & label {
             cursor: pointer;
             line-height: 2;
@@ -144,24 +162,6 @@ padding: 0 2.5em;
 
         @media screen and (min-width: 700px) {
             width: 32%;
-        }
-
-        & img {
-            display: block;
-            cursor: pointer;
-            
-            &:hover {
-                filter: sepia(1)
-            }
-        }
-        
-        & .hiddenArea {
-            & img {
-                cursor: default;
-                &:hover {
-                    filter: unset;
-                }
-            }
         }
     }
 }
