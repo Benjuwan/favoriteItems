@@ -4,6 +4,8 @@ import { CheckItemsContext } from "../provider/CheckItemsContext";
 import { useLocalSaved } from "./useLocalSaved";
 import { usePushLocalSaveBoxes } from "./usePushLocalSaveBoxes";
 
+/* localstorage への登録処理 */
+
 export const useLocalDataSaved = () => {
     const { localSaveBoxes } = useContext(LocalStorageContext)
     const { isCheckItems } = useContext(CheckItemsContext);
@@ -11,6 +13,7 @@ export const useLocalDataSaved = () => {
     const { _pushLocalSaveBoxes } = usePushLocalSaveBoxes();
     const { _localSaved } = useLocalSaved();
 
+    /* 任意の配列から特定のデータ（対象コンテンツのid）を取得して 当該コンテンツの中身（itemContent.innerHTML）を localstorage の配列に格納 */
     const _getSpecificItems = (targetAry: string[]) => {
         const itemContents: NodeListOf<HTMLDivElement> = document.querySelectorAll('.itemsOrigin');
         targetAry.forEach(targetEl => {
@@ -25,6 +28,7 @@ export const useLocalDataSaved = () => {
         });
     }
 
+    /* 既存の localStorage データの有無を確認して存在する場合は、チェックされているコンテンツの中身（itemsOriginContent）を localstorage の配列に格納及び、現在登録済みのコンテンツ表記を調整・更新かつ localstorage を更新する */
     const LocalDataSave = () => {
         const getLocalStorageItems: string | null = localStorage.getItem('localSaveBoxes');
         if (getLocalStorageItems !== null) {
@@ -49,6 +53,7 @@ export const useLocalDataSaved = () => {
         /* 初回時の処理 */
         else {
             _getSpecificItems(isCheckItems);
+            /* 現在登録済みのコンテンツ表記を調整・更新かつ localstorage を更新する */
             _localSaved('localSaveBoxes', localSaveBoxes);
         }
     }

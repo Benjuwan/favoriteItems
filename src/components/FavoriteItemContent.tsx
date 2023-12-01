@@ -22,6 +22,7 @@ export const FavoriteItemContent = memo(() => {
     const { GetTargetImgNum } = useGetTargetImgNum();
     const { RemoveItems } = useRemoveItems();
     const { ResetAllFavorite } = useResetAllFavorite();
+    const { inUseEffect_act_selectCheckedItems } = useSelectCheckedItems();
 
     /* 既存の localStorage データを State に格納 */
     const [isCheckSaveData, setCheckSaveData] = useState<string[]>([]);
@@ -33,7 +34,7 @@ export const FavoriteItemContent = memo(() => {
         }
     }, [isItems]);
 
-    const { inUseEffect_act_selectCheckedItems } = useSelectCheckedItems();
+    /* useSelectCheckedItems.ts：登録されている localStorage データを呼び出して、.defaultWrapper のコンテンツに反映する処理 */
     useEffect(() => inUseEffect_act_selectCheckedItems(), []);
 
     return (

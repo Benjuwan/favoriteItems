@@ -1,3 +1,5 @@
+/* 画像クリックでのモーダル表示 */
+
 export const useViewDetails = () => {
     const viewDetails = (
         itemContent: HTMLDivElement | HTMLElement,

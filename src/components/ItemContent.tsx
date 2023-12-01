@@ -17,6 +17,9 @@ export const ItemContent: FC<itemContentType> = memo(({
 
     const { viewDetails } = useViewDetails();
 
+    /**
+     * items- や itemsOrigin などのワードは各種カスタムフックで使用しているので変更時は注意
+    */
     return (
         <ItemContents id={`items-${index + 1}`} className="itemContents" onClick={(itemEl) => {
             viewDetails(itemEl.currentTarget, 'OnView');

@@ -10,7 +10,7 @@ type defaultContext = {
     children: ReactNode
 }
 export const ImgNameFragment: FC<defaultContext> = ({ children }) => {
-    const [isImgNameSrc, setImgNameSrc] = useState<string[]>([]);
+    const [isImgNameSrc, setImgNameSrc] = useState<string[]>([]); // 各画像の「データ名」を管理する配列 State
 
     return (
         <ImgNameContext.Provider value={{ isImgNameSrc, setImgNameSrc }}>

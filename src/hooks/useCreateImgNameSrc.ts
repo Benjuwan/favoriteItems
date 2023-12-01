@@ -1,6 +1,8 @@
 import { useContext } from "react";
 import { ImgNameContext } from "../provider/ImgNameSrcContext";
 
+/* ダミー画像の生成 */
+
 export const useCreateImgNameSrc = () => {
     const { isImgNameSrc, setImgNameSrc } = useContext(ImgNameContext);
 
