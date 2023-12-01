@@ -5,13 +5,13 @@
 `localstorage`を使ったお気に入りアイテム（画像）の登録機能
 
 ## LocalStorage
-`Google Dev Tool`の`Application` - `Storage` - `Local Storage`で自身のユーザーエージェント（クライアント）に保存されている`localStorage`データの確認・編集が可能
+`Google Dev Tool`の`Application` - `Storage` - `Local Storage`で自身のユーザーエージェント（クライアント：サイト閲覧時のブラウザ）に保存されている`localStorage`データの確認・編集が可能
 
 - 本ファイルで使用している`localStorage`データ名は`localSaveBoxes`です。
 
 ## 仕様 ~~（調整不足）~~
-- チェックボックスの挙動
-state 管理ではなく、`JavaScript`の`setAttribute`,`removeAttribute`メソッドで`checked`の付与・解除を行っているせいか「実挙動と見た目で差異（1）」がある（1：お気に入り登録済みコンテンツのラベルクリックで削除後に、もう一度同じコンテンツを登録しようと **クリックした際にチェックマークが付かない**）<br />
+- チェックボックスの挙動<br />
+`React`の`state`管理ではなく、`JavaScript`の`setAttribute`,`removeAttribute`メソッドで`checked`の付与・解除を行っているせいか「実挙動と見た目で差異（1）」がある（1：お気に入り登録済みコンテンツのラベルクリックで削除後に、もう一度同じコンテンツを登録しようと **クリックした際にチェックマークが付かない**）<br />
 分かりづらい（UXが悪い）のでチェックマークをアイコンか何かに変更する予定？<br />取り急ぎ`Items.tsx`で`input`要素のスタイル（CSS）を調整して応急処置。
 
 ## FixTo
