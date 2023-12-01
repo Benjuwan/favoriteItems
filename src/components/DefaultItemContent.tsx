@@ -8,10 +8,11 @@ export const DefaultItemContent = memo(() => {
 
     return (
         <div className="itemsWrapper defaultWrapper">
+            <p id="explainTxt">各アイテムのラベルをクリックするとお気に入り登録できます。</p>
             {isImgNameSrc.map((imgNameSrc, i) => (
                 <div className="items" key={i}>
-                    <ItemContent imgNameSrc={imgNameSrc} index={i} />
-                    <CheckBox index={i} />
+                    <ItemContent index={i} imgNameSrc={imgNameSrc} />
+                    <CheckBox index={i} imgNameSrc={imgNameSrc} />
                 </div>
             ))}
         </div>
