@@ -19,6 +19,7 @@ export const Items = memo(() => {
 
     const { createImgNameSrc } = useCreateImgNameSrc();
     useEffect(() => {
+        /* dammy___txtForImgesAry メソッドを通じてダミー画像を生成 */
         const imgFileNames: string[] = dammy___txtForImgesAry();
         createImgNameSrc(15, imgFileNames);
 

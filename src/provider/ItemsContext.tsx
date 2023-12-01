@@ -10,7 +10,7 @@ type defaultContext = {
     children: ReactNode
 }
 export const ItemsFragment: FC<defaultContext> = ({ children }) => {
-    const [isItems, setItems] = useState<string[]>([]);
+    const [isItems, setItems] = useState<string[]>([]); // 登録（予定）コンテンツの中身（.itemsOrigin の中身）を管理する配列 State
 
     return (
         <ItemsContext.Provider value={{ isItems, setItems }}>

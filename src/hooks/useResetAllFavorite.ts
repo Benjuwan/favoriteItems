@@ -2,6 +2,8 @@ import { useContext } from "react";
 import { ItemsContext } from "../provider/ItemsContext";
 import { CheckItemsContext } from "../provider/CheckItemsContext";
 
+/* localStorage データの削除及び、現在登録済みのコンテンツ表記と登録予定コンテンツデータの中身を空（全削除）にして、ページを再読み込みする */
+
 export const useResetAllFavorite = () => {
     const { setItems } = useContext(ItemsContext);
     const { setCheckItems } = useContext(CheckItemsContext);

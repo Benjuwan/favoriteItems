@@ -1,5 +1,7 @@
 import { useLocalSaved } from "./useLocalSaved";
 
+/* 当該コンテンツの削除及び localStorage への更新 */
+
 export const useRemoveItems = () => {
     const { _localSaved } = useLocalSaved();
 

@@ -34,6 +34,7 @@ export const LocalSaveCtrl = memo(() => {
         if (FirstRenderSignal && isCheckSaveData.length <= 0) ResetAllFavorite();
     }, [isCheckSaveData]);
 
+    /* 現在 localstorage データに存在する子（たち）と選択された追加の子（たち）の選定及び localstorage データにセット */
     const _check_SelectedContents = () => {
         const checkedContents: NodeListOf<HTMLElement> = document.querySelectorAll('[checked]');
         if (checkedContents.length > 0) {
@@ -56,6 +57,7 @@ export const LocalSaveCtrl = memo(() => {
         }
     }
 
+    /* 既存の localStorage データの有無により「お気に入り登録・表示」ボタンクリック時の挙動を変更 */
     const localDataSave_Favorite = () => {
         if (isCheckSaveData.length > 0) {
             /* localStorage データがある場合は checked = 'true' の内容のみ localStorage に保存 */
