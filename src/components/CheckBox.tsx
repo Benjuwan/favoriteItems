@@ -1,16 +1,15 @@
 import { memo, FC, ChangeEvent, useContext, useState, useEffect } from "react";
 import { CheckItemsContext } from "../provider/CheckItemsContext";
-import { ImgNameContext } from "../provider/ImgNameSrcContext";
 import { useGetTargetImgNum } from "../hooks/useGetTargetImgNum";
 import { useRemoveItems } from "../hooks/useRemoveItems";
 
 type checkBoxType = {
-    index: number
+    index: number;
+    imgNameSrc: string;
 }
 
-export const CheckBox: FC<checkBoxType> = memo(({ index }) => {
+export const CheckBox: FC<checkBoxType> = memo(({ index, imgNameSrc }) => {
     const { isCheckItems, setCheckItems } = useContext(CheckItemsContext);
-    const { isImgNameSrc } = useContext(ImgNameContext);
 
     /* 既存の localStorage データを State に格納 */
     const [isCheckSaveData, setCheckSaveData] = useState<string[]>([]);
@@ -37,7 +36,8 @@ export const CheckBox: FC<checkBoxType> = memo(({ index }) => {
         const targetInputEl_idAttr = inputEl.getAttribute('id') as string;
         const getTargetItemNumbers = Array.from(isCheckSaveData).map(checkSaveDataItem => GetTargetImgNum(checkSaveDataItem, 'item').split('：')[0]);
         getTargetItemNumbers.forEach(targetItemNumber => {
-            if (targetItemNumber.match(targetInputEl_idAttr)) {
+            /* if文が「targetItemNumber.match(targetInputEl_idAttr)」だと 10 や 11 を選択している時に 1 までもがマッチ対象となってしまって 1 を登録できなくなるので === で厳密に判定 */
+            if (targetItemNumber === targetInputEl_idAttr) {
                 const parentItemEl: HTMLDivElement | null = inputEl.closest('.items');
                 parentItemEl?.classList.remove('checkedContent');
                 inputEl.removeAttribute('checked'); // useLocalDataSaved.ts の LocalDataSave メソッド対策（[checked]要素の .itemsOrigin の中身を localstorage に保存する処理への対策）
@@ -97,6 +97,6 @@ export const CheckBox: FC<checkBoxType> = memo(({ index }) => {
     return (
         <label htmlFor={`item-${index + 1}`} onChange={(labelEl: ChangeEvent<HTMLLabelElement>) => {
             checkItems(labelEl.currentTarget);
-        }}><input id={`item-${index + 1}`} type="checkbox" />{`No.${index + 1}：${isImgNameSrc[index]}の画像`}</label>
+        }}><input id={`item-${index + 1}`} type="checkbox" />{`No.${index + 1}：${imgNameSrc}の画像`}</label>
     );
 });

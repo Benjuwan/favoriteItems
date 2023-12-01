@@ -3,9 +3,9 @@ import styled from "styled-components";
 import { useViewDetails } from "../hooks/useViewDetails";
 
 type itemContentType = {
-    index: number,
-    imgNameSrc?: string,
-    children?: ReactNode
+    index: number;
+    imgNameSrc?: string;
+    children?: ReactNode;
 }
 
 export const ItemContent: FC<itemContentType> = memo(({

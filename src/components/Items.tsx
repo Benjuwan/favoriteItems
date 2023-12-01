@@ -99,6 +99,11 @@ padding: 0 2.5em;
     flex-flow: row wrap;
     gap: 2%;
 
+    & #explainTxt {
+        width: 100%;
+        margin-bottom: .5em;
+    }
+
     &.favoriteWrapper {
         border-bottom: 1px dotted #333;
         margin-bottom: 5em;

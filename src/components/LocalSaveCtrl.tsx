@@ -72,7 +72,7 @@ export const LocalSaveCtrl = memo(() => {
     return (
         <div className="localSaveInfos">
             <p>現在のお気に入りは「{isCheckItems.join(', ')}」です。</p>
-            <button type="button" className="localDataSave" onClick={localDataSave_Favorite}>お気に入りを登録・表示</button>
+            <button type="button" className="localDataSave" onClick={localDataSave_Favorite}>お気に入りを{isCheckSaveData.length > 0 ? '更新' : '登録'}・表示</button>
             <button type="button" className="resetAllFavorite" disabled={isItems.length <= 0} onClick={ResetAllFavorite}>お気に入りをリセット</button>
         </div>
     );
