@@ -1,5 +1,6 @@
 import { useLocalSaved } from "./useLocalSaved";
 import { usePushLocalSaveBoxes } from "./usePushLocalSaveBoxes";
+import { useResetAllFavorite } from "./useResetAllFavorite";
 import { useReturnTargetElsStr } from "./useReturnTargetElsStr";
 
 /* ラベルクリックによる登録コンテンツ削除で既存の localStorage データが空になったけれどもチェックされているコンテンツがいくつかある時のコンテンツ再登録処理（基本的に useEffect で使用して、依存配列には localStorage データの State（isCheckSaveData）を指定）*/
@@ -8,6 +9,7 @@ export const useNolocalDataButChekedExist = () => {
     const { _returnTargetElsStr } = useReturnTargetElsStr();
     const { _pushLocalSaveBoxes } = usePushLocalSaveBoxes();
     const { _localSaved } = useLocalSaved();
+    const { ResetAllFavorite } = useResetAllFavorite();
 
     const _nolocalDataButChekedExist = (
         isCheckSaveData: string[],
@@ -31,7 +33,11 @@ export const useNolocalDataButChekedExist = () => {
             _localSaved('localSaveBoxes', getTargetItems);
             setFirstRenderSignal((_prevFirstRenderSignal) => false);
             location.reload();
-        }
+        } else if (
+            FirstRenderSignal &&
+            isCheckSaveData.length === 0 &&
+            checkedContents.length === 0
+        ) ResetAllFavorite(); // localStorage データの中身も、チェックされているコンテンツも全てが存在しない場合はリロード
     }
 
     return { _nolocalDataButChekedExist }
