@@ -11,6 +11,9 @@ type checkBoxType = {
 export const CheckBox: FC<checkBoxType> = memo(({ index, imgNameSrc }) => {
     const { isCheckItems, setCheckItems } = useContext(CheckItemsContext);
 
+    const { GetTargetImgNum } = useGetTargetImgNum();
+    const { RemoveItems } = useRemoveItems();
+
     /* 既存の localStorage データを State に格納 */
     const [isCheckSaveData, setCheckSaveData] = useState<string[]>([]);
     useEffect(() => {
@@ -20,9 +23,6 @@ export const CheckBox: FC<checkBoxType> = memo(({ index, imgNameSrc }) => {
             setCheckSaveData((_prevCheckSaveData) => SaveDateItems);
         }
     }, [isCheckItems]);
-
-    const { GetTargetImgNum } = useGetTargetImgNum();
-    const { RemoveItems } = useRemoveItems();
 
     /* 当該コンテンツの削除（及び localStorage への更新）*/
     const _removeItems = (inputEl: HTMLInputElement) => {

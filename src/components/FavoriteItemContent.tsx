@@ -1,4 +1,4 @@
-import { memo, useEffect, useContext, useState } from "react";
+import { memo, FC, useEffect, useContext, useState } from "react";
 import parse from 'html-react-parser';
 /**
  * 【html-react-parser】HTML文字列をReact要素に変換するツール
@@ -14,14 +14,19 @@ import { ItemContent } from "./ItemContent";
 import { useSelectCheckedItems } from "../hooks/useSelectCheckedItems";
 import { useGetTargetImgNum } from "../hooks/useGetTargetImgNum";
 import { useRemoveItems } from "../hooks/useRemoveItems";
-import { useResetAllFavorite } from "../hooks/useResetAllFavorite";
+import { useNolocalDataButChekedExist } from "../hooks/useNolocalDataButChekedExist";
 
-export const FavoriteItemContent = memo(() => {
+type favoriteItemContentType = {
+    FirstRenderSignal: boolean;
+    setFirstRenderSignal: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export const FavoriteItemContent: FC<favoriteItemContentType> = memo(({ FirstRenderSignal, setFirstRenderSignal }) => {
     const { isItems } = useContext(ItemsContext);
 
     const { GetTargetImgNum } = useGetTargetImgNum();
     const { RemoveItems } = useRemoveItems();
-    const { ResetAllFavorite } = useResetAllFavorite();
+    const { _nolocalDataButChekedExist } = useNolocalDataButChekedExist();
     const { inUseEffect_act_selectCheckedItems } = useSelectCheckedItems();
 
     /* 既存の localStorage データを State に格納 */
@@ -33,6 +38,9 @@ export const FavoriteItemContent = memo(() => {
             setCheckSaveData((_prevCheckSaveData) => SaveDateItems);
         }
     }, [isItems]);
+
+    /* ラベルクリックによる登録コンテンツ削除で既存の localStorage データが空になった時の再登録処理（LocalSaveCtrl.tsx でも使用）*/
+    useEffect(() => _nolocalDataButChekedExist(isCheckSaveData, FirstRenderSignal, setFirstRenderSignal), [isCheckSaveData]);
 
     /* useSelectCheckedItems.ts：登録されている localStorage データを呼び出して、.defaultWrapper のコンテンツに反映する処理 */
     useEffect(() => inUseEffect_act_selectCheckedItems(), []);
@@ -59,9 +67,6 @@ export const FavoriteItemContent = memo(() => {
                             btnEl.stopPropagation(); // 親要素の click イベント（viewDetails）の実行防止
                             _removeClassName_CheckedContent(btnEl.currentTarget);
                             RemoveItems(GetTargetImgNum(item, 'itemsOrigin'));
-                            {
-                                isCheckSaveData.length <= 1 && ResetAllFavorite(); // ラストワンのタイミングで 既存の localStorage データをリセット
-                            }
                         }}>お気に入り解除</button>
                     </ItemContent>
                 </div>
