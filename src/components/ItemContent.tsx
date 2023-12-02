@@ -55,6 +55,7 @@ const ItemContents = styled.div`
         inset: 0;
         display: grid;
         place-items: center;
+        padding: 1em;
         background-color: rgba(0,0,0,.85);
         visibility: hidden;
         opacity: 0;

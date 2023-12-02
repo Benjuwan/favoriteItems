@@ -1,22 +1,28 @@
-import { memo, useContext, useEffect, useState } from "react";
+import { memo, FC, useContext, useEffect, useState } from "react";
 import { ItemsContext } from "../provider/ItemsContext";
 import { CheckItemsContext } from "../provider/CheckItemsContext";
 import { useLocalDataSaved } from "../hooks/useLocalDataSaved";
 import { useResetAllFavorite } from "../hooks/useResetAllFavorite";
 import { usePushLocalSaveBoxes } from "../hooks/usePushLocalSaveBoxes";
 import { useLocalSaved } from "../hooks/useLocalSaved";
+import { useReturnTargetElsStr } from "../hooks/useReturnTargetElsStr";
+import { useNolocalDataButChekedExist } from "../hooks/useNolocalDataButChekedExist";
 
-export const LocalSaveCtrl = memo(() => {
+type localSaveCtrlType = {
+    FirstRenderSignal: boolean;
+    setFirstRenderSignal: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export const LocalSaveCtrl: FC<localSaveCtrlType> = memo(({ FirstRenderSignal, setFirstRenderSignal }) => {
     const { isItems } = useContext(ItemsContext);
     const { isCheckItems } = useContext(CheckItemsContext);
 
     const { LocalDataSave } = useLocalDataSaved();
     const { ResetAllFavorite } = useResetAllFavorite();
+    const { _nolocalDataButChekedExist } = useNolocalDataButChekedExist();
     const { _pushLocalSaveBoxes } = usePushLocalSaveBoxes();
     const { _localSaved } = useLocalSaved();
-
-    /* 初回レンダリングのシグナル */
-    const [FirstRenderSignal, setFirstRenderSignal] = useState<boolean>(false);
+    const { _returnTargetElsStr } = useReturnTargetElsStr();
 
     /* 既存の localStorage データを State に格納 */
     const [isCheckSaveData, setCheckSaveData] = useState<string[]>([]);
@@ -28,23 +34,17 @@ export const LocalSaveCtrl = memo(() => {
         }
     }, [isCheckItems]);
 
-    /* 初回レンダリング後、checkbox の操作で選択されているコンテンツ（既存の localStorage データの中身）が無くなった場合はリセット処理実行 */
-    useEffect(() => {
-        setFirstRenderSignal((_prevFirstRenderSignal) => true);
-        if (FirstRenderSignal && isCheckSaveData.length <= 0) ResetAllFavorite();
-    }, [isCheckSaveData]);
+    /* ラベルクリックによる登録コンテンツ削除で既存の localStorage データが空になった時の再登録処理（FavoriteItemContent.tsx でも使用）*/
+    useEffect(() => _nolocalDataButChekedExist(isCheckSaveData, FirstRenderSignal, setFirstRenderSignal), [isCheckSaveData]);
 
     /* 現在 localstorage データに存在する子（たち）と選択された追加の子（たち）の選定及び localstorage データにセット */
     const _check_SelectedContents = () => {
         const checkedContents: NodeListOf<HTMLElement> = document.querySelectorAll('[checked]');
         if (checkedContents.length > 0) {
-            const checkedItems: string[] = Array.from(checkedContents).map(checkedContent => {
-                const parentEl: HTMLDivElement | null = checkedContent.closest('.items');
-                const itemsOriginStr = parentEl?.querySelector('.itemsOrigin')?.innerHTML as string; // 型アサーション：型推論の上書き
-                return itemsOriginStr;
-            });
+            /* _returnTargetElsStr：条件に一致する複数要素が持つ「任意の子要素の中身（.itemsOrigin の中身）」を文字列として取得 */
+            const targetElsStr: string[] = _returnTargetElsStr(checkedContents);
             /* getTargetItems：現在 localstorage データに存在する子（たち）と選択された追加の子（たち）*/
-            const getTargetItems: string[] = [...isCheckSaveData, ...checkedItems];
+            const getTargetItems: string[] = [...isCheckSaveData, ...targetElsStr];
             return getTargetItems;
         }
     }

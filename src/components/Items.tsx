@@ -17,7 +17,10 @@ export const Items = memo(() => {
     /* 既存の localStorage データ State */
     const [isCheckSaveData, setCheckSaveData] = useState<string[]>([]);
 
-    const { createImgNameSrc, createImgNameSrc_alt } = useCreateImgNameSrc();
+    /* 初回レンダリングの判定有無用の State */
+    const [FirstRenderSignal, setFirstRenderSignal] = useState<boolean>(false);
+
+    const { createImgNameSrc } = useCreateImgNameSrc();
     useEffect(() => {
         /* dammy___txtForImgesAry メソッドを通じてダミー画像を生成 */
         const imgFileNames: string[] = dammy___txtForImgesAry();
@@ -30,14 +33,16 @@ export const Items = memo(() => {
             const SaveDateItems: string[] = JSON.parse(getLocalStorageItems);
             setCheckSaveData((_prevCheckSaveData) => SaveDateItems);
         }
+
+        setTimeout(() => window.scrollTo(0, 0), 500); // 疑似的な遅延・非同期処理で再読み込み時にスクロールトップする
     }, []);
 
     return (
         <ItemEls className="ItemEls">
             {(isCheckItems.length > 0 || isCheckSaveData.length > 0) &&
                 <>
-                    <LocalSaveCtrl />
-                    <FavoriteItemContent />
+                    <LocalSaveCtrl FirstRenderSignal={FirstRenderSignal} setFirstRenderSignal={setFirstRenderSignal} />
+                    <FavoriteItemContent FirstRenderSignal={FirstRenderSignal} setFirstRenderSignal={setFirstRenderSignal} />
                 </>
             }
             <DefaultItemContent />
@@ -48,6 +53,7 @@ export const Items = memo(() => {
 const ItemEls = styled.div`
 font-size: 1.4rem;
 padding: 0 2.5em;
+
 @media screen and (min-width: 1025px) {
     padding: 0;
     font-size: 14px;
@@ -72,6 +78,13 @@ padding: 0 2.5em;
     color: #fff;
     border: 1px solid transparent;
     border-radius: 4px;
+    min-height: 4.4rem;
+    margin-bottom: .5em;
+    
+    @media screen and (min-width: 1025px) {
+        min-height: 44px;
+        margin-bottom: 0;
+    }
 
     &.localDataSave {
         background-color: #0a2aa9;
