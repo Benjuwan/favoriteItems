@@ -30,7 +30,7 @@ export const useLocalDataSaved = () => {
         });
     }
 
-    /* 既存の localStorage データの有無を確認して存在する場合は、チェックされているコンテンツの中身（itemsOriginContent）を localstorage の配列に格納及び、現在登録済みのコンテンツ表記を調整・更新かつ localstorage を更新する */
+    /* 既存の localStorage データの有無を確認して存在する場合は、チェックされているコンテンツの中身（itemsOriginContent）を localstorage の配列に格納及び localstorage を更新する */
     const LocalDataSave = () => {
         const getLocalStorageItems: string | null = localStorage.getItem('localSaveBoxes');
         if (getLocalStorageItems !== null) {
@@ -48,7 +48,6 @@ export const useLocalDataSaved = () => {
         /* 初回時の処理 */
         else {
             _getSpecificItems(isCheckItems);
-            /* 現在登録済みのコンテンツ表記を調整・更新かつ localstorage を更新する */
             _localSaved('localSaveBoxes', localSaveBoxes);
         }
     }

@@ -8,7 +8,7 @@
 
 - 用意した画像を使用したい場合（デフォルトでは下記機能は無効）<br />
 1：`ItemContent.tsx`の`createImgNameSrc_alt`変数を`true`に切り替える。<br />
-2：`Items.tsx`で`createImgNameSrc`メソッドを削除（またはコメントアウトで無効化）して、その代わりに`createImgNameSrc_alt`メソッドを使用する（引数には用意した**画像の枚数**を指定）。
+2：`Items.tsx`で`createImgNameSrc`メソッドを削除（またはコメントアウトで無効化）して、その代わりに`createImgNameSrc_alt`メソッドを使用する（引数には用意した**画像の枚数**を指定）。<br />
 3：注意事項の項目に記載されている`vite.config.ts`の設定を変更。
 
 ## 注意事項
