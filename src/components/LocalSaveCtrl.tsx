@@ -1,5 +1,6 @@
 import { memo, FC, useContext, useEffect, useState } from "react";
 import { CheckItemsContext } from "../provider/CheckItemsContext";
+import { ItemsContext } from "../provider/ItemsContext";
 import { useLocalDataSaved } from "../hooks/useLocalDataSaved";
 import { useResetAllFavorite } from "../hooks/useResetAllFavorite";
 import { useGetTargetImgNum } from "../hooks/useGetTargetImgNum";
@@ -15,6 +16,7 @@ type localSaveCtrlType = {
 
 export const LocalSaveCtrl: FC<localSaveCtrlType> = memo(({ FirstRenderSignal, setFirstRenderSignal }) => {
     const { isCheckItems } = useContext(CheckItemsContext);
+    const { isItems } = useContext(ItemsContext);
 
     const { LocalDataSave } = useLocalDataSaved();
     const { ResetAllFavorite } = useResetAllFavorite();
@@ -38,7 +40,7 @@ export const LocalSaveCtrl: FC<localSaveCtrlType> = memo(({ FirstRenderSignal, s
             })
             setCheckSaveData((_prevCheckSaveData) => SaveDataItemsSort);
         }
-    }, [isCheckItems]);
+    }, [isItems]);
 
     /* ラベルクリックによる登録コンテンツ削除で既存の localStorage データが空になった時の再登録処理（FavoriteItemContent.tsx でも使用）*/
     useEffect(() => _nolocalDataButChekedExist(isCheckSaveData, FirstRenderSignal, setFirstRenderSignal), [isCheckSaveData]);
