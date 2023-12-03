@@ -1,8 +1,8 @@
 import { memo, FC, useContext, useEffect, useState } from "react";
-import { ItemsContext } from "../provider/ItemsContext";
 import { CheckItemsContext } from "../provider/CheckItemsContext";
 import { useLocalDataSaved } from "../hooks/useLocalDataSaved";
 import { useResetAllFavorite } from "../hooks/useResetAllFavorite";
+import { useGetTargetImgNum } from "../hooks/useGetTargetImgNum";
 import { usePushLocalSaveBoxes } from "../hooks/usePushLocalSaveBoxes";
 import { useLocalSaved } from "../hooks/useLocalSaved";
 import { useReturnTargetElsStr } from "../hooks/useReturnTargetElsStr";
@@ -14,11 +14,11 @@ type localSaveCtrlType = {
 }
 
 export const LocalSaveCtrl: FC<localSaveCtrlType> = memo(({ FirstRenderSignal, setFirstRenderSignal }) => {
-    const { isItems } = useContext(ItemsContext);
     const { isCheckItems } = useContext(CheckItemsContext);
 
     const { LocalDataSave } = useLocalDataSaved();
     const { ResetAllFavorite } = useResetAllFavorite();
+    const { GetTargetImgNum } = useGetTargetImgNum();
     const { _nolocalDataButChekedExist } = useNolocalDataButChekedExist();
     const { _pushLocalSaveBoxes } = usePushLocalSaveBoxes();
     const { _localSaved } = useLocalSaved();
@@ -30,7 +30,13 @@ export const LocalSaveCtrl: FC<localSaveCtrlType> = memo(({ FirstRenderSignal, s
         const getLocalStorageItems: string | null = localStorage.getItem('localSaveBoxes');
         if (getLocalStorageItems !== null) {
             const SaveDateItems: string[] = JSON.parse(getLocalStorageItems);
-            setCheckSaveData((_prevCheckSaveData) => SaveDateItems);
+            /* localStroage データを（itemsOrigin- のナンバーで）ソート */
+            const SaveDataItemsSort: string[] = SaveDateItems.sort((aheadEl, behindEl) => {
+                const itemsOriginNum_Ahead = aheadEl.split('itemsOrigin-')[1].split('：')[0];
+                const itemsOriginNum_Behind = behindEl.split('itemsOrigin-')[1].split('：')[0];
+                return Number(itemsOriginNum_Ahead) - Number(itemsOriginNum_Behind);
+            })
+            setCheckSaveData((_prevCheckSaveData) => SaveDataItemsSort);
         }
     }, [isCheckItems]);
 
@@ -69,11 +75,22 @@ export const LocalSaveCtrl: FC<localSaveCtrlType> = memo(({ FirstRenderSignal, s
         }
     }
 
+    /* 現在選択しているコンテンツを任意の文字列に加工したリストを生成 */
+    const currentCheckedItemLists = () => {
+        return isCheckSaveData.map(checkSaveData => GetTargetImgNum(checkSaveData, 'itemsOrigin'));
+    }
+
     return (
         <div className="localSaveInfos">
-            <p>現在のお気に入りは「{isCheckItems.join(', ')}」です。</p>
+            {isCheckSaveData.length > 0 ?
+                <>
+                    <p>現在のお気に入りは「{currentCheckedItemLists().join(', ')}」です。</p>
+                    <p>新たに選択しているのは「{isCheckItems.join(', ')}」です。</p>
+                </> :
+                <p>現在のお気に入りは「{isCheckItems.join(', ')}」です。</p>
+            }
             <button type="button" className="localDataSave" onClick={localDataSave_Favorite}>お気に入りを{isCheckSaveData.length > 0 ? '更新' : '登録'}・表示</button>
-            <button type="button" className="resetAllFavorite" disabled={isItems.length <= 0} onClick={ResetAllFavorite}>お気に入りをリセット</button>
+            <button type="button" className="resetAllFavorite" disabled={isCheckSaveData.length <= 0} onClick={ResetAllFavorite}>お気に入りをリセット</button>
         </div>
     );
 });
