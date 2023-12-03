@@ -96,7 +96,7 @@ export const CheckBox: FC<checkBoxType> = memo(({ index, imgNameSrc }) => {
             if (checkContentAlreadyExist.length <= 0) setCheckItems((_prevCheckItems) => [...isCheckItems, checkedItemId]);
         } else {
             /* チェックしたコンテンツがいくつか既に存在する場合はチェックボックス要素の id と既存の内容とを照合 */
-            const findCheckedItemId: string | undefined = isCheckItems.find(checkItems => checkItems.match(checkedItemId));
+            const findCheckedItemId: string | undefined = isCheckItems.find(checkItems => checkItems === checkedItemId); //（match のような一文字でも含んでいれば true ではなく）厳密なマッチング判定を行う
             if (typeof findCheckedItemId !== "undefined") {
                 /* 照合結果が陽性の場合は splice 処理の方へ進む */
                 if (inputEl !== null) _checkedJudge_fetchContent(inputEl);
