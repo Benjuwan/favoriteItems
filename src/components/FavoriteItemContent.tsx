@@ -35,7 +35,13 @@ export const FavoriteItemContent: FC<favoriteItemContentType> = memo(({ FirstRen
         const getLocalStorageItems: string | null = localStorage.getItem('localSaveBoxes');
         if (getLocalStorageItems !== null) {
             const SaveDateItems: string[] = JSON.parse(getLocalStorageItems);
-            setCheckSaveData((_prevCheckSaveData) => SaveDateItems);
+            /* localStroage データを（itemsOrigin- のナンバーで）ソート */
+            const SaveDataItemsSort: string[] = SaveDateItems.sort((aheadEl, behindEl) => {
+                const itemsOriginNum_Ahead = aheadEl.split('itemsOrigin-')[1].split('：')[0];
+                const itemsOriginNum_Behind = behindEl.split('itemsOrigin-')[1].split('：')[0];
+                return Number(itemsOriginNum_Ahead) - Number(itemsOriginNum_Behind);
+            })
+            setCheckSaveData((_prevCheckSaveData) => SaveDataItemsSort);
         }
     }, [isItems]);
 
@@ -58,7 +64,7 @@ export const FavoriteItemContent: FC<favoriteItemContentType> = memo(({ FirstRen
 
     return (
         <div className="itemsWrapper favoriteWrapper">
-            {isItems?.map((item, i) => (
+            {isCheckSaveData?.map((item, i) => (
                 <div className="items favorites" key={i}>
                     <ItemContent index={i}>
                         {parse(item)}

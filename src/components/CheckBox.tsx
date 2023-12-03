@@ -71,15 +71,28 @@ export const CheckBox: FC<checkBoxType> = memo(({ index, imgNameSrc }) => {
         }
     }
 
+    /* 現在選択しているコンテンツを任意の文字列に加工したリストを生成し、さらに特定の文字列に加工したリストにして返す */
+    const currentCheckedItemLists = () => {
+        return isCheckSaveData.map(checkSaveData => {
+            const getTargetStr: string = GetTargetImgNum(checkSaveData, 'item');
+            return getTargetStr.split('：')[0];
+        });
+    }
+
     /* チェックボックスのクリックイベント */
     const checkItems = (labelEl: HTMLLabelElement) => {
         const inputEl: HTMLInputElement | null = labelEl.querySelector('input[type="checkbox"]');
         const checkedItemId = inputEl?.getAttribute('id') as string; // 型アサーション：型推論の上書き
 
+        /* チェックしたコンテンツが登録済みか判定して、存在する場合は checkContentAlreadyExist に格納する */
+        const checkedItemLists = currentCheckedItemLists();
+        const checkContentAlreadyExist: string[] = checkedItemLists.filter(checkedItemList => checkedItemList === checkedItemId);
+
         if (isCheckItems.length <= 0) {
-            /* チェックしたコンテンツがまだ無い場合は checked を付与して State を更新 */
+            /* チェックしたコンテンツが未登録の場合は checked を付与 */
             if (inputEl !== null) _checkedJudge_fetchContent(inputEl);
-            setCheckItems((_prevCheckItems) => [...isCheckItems, checkedItemId]);
+            /* チェックしたコンテンツが未登録の場合は State 更新（登録作業に進める）*/
+            if (checkContentAlreadyExist.length <= 0) setCheckItems((_prevCheckItems) => [...isCheckItems, checkedItemId]);
         } else {
             /* チェックしたコンテンツがいくつか既に存在する場合はチェックボックス要素の id と既存の内容とを照合 */
             const findCheckedItemId: string | undefined = isCheckItems.find(checkItems => checkItems.match(checkedItemId));
