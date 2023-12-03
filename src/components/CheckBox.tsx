@@ -59,15 +59,16 @@ export const CheckBox: FC<checkBoxType> = memo(({ index, imgNameSrc }) => {
     /* リアルタイムでコンテンツの削除更新を行う */
     const _onTime_removeCheckItems = (
         isFindCheckedItemId: boolean,
-        find_checked_CheckedItemId: string
+        find_checked_ItemId: string,
+        checkContentAlreadyExist: string[]
     ) => {
         if (isFindCheckedItemId === true) {
-            const targetIndex: number = isCheckItems.indexOf(find_checked_CheckedItemId);
+            const targetIndex: number = isCheckItems.indexOf(find_checked_ItemId);
             const shallowCopy: string[] = [...isCheckItems];
             shallowCopy.splice(targetIndex, 1);
-            setCheckItems((_prevCheckItems) => [...shallowCopy]);
+            if (checkContentAlreadyExist.length <= 0) setCheckItems((_prevCheckItems) => [...shallowCopy]); // チェックしたコンテンツが未登録の場合は State 更新（登録作業に進める）
         } else {
-            if (find_checked_CheckedItemId !== undefined) setCheckItems((_prevCheckItems) => [...isCheckItems, find_checked_CheckedItemId]);
+            if (checkContentAlreadyExist.length <= 0) setCheckItems((_prevCheckItems) => [...isCheckItems, find_checked_ItemId]); // チェックしたコンテンツが未登録の場合は State 更新（登録作業に進める）
         }
     }
 
@@ -99,11 +100,11 @@ export const CheckBox: FC<checkBoxType> = memo(({ index, imgNameSrc }) => {
             if (typeof findCheckedItemId !== "undefined") {
                 /* 照合結果が陽性の場合は splice 処理の方へ進む */
                 if (inputEl !== null) _checkedJudge_fetchContent(inputEl);
-                _onTime_removeCheckItems(true, findCheckedItemId);
+                _onTime_removeCheckItems(true, findCheckedItemId, checkContentAlreadyExist);
             } else {
                 /* 照合結果が陰性の場合は State を更新（チェックされたコンテンツ認定）*/
                 if (inputEl !== null) _checkedJudge_fetchContent(inputEl);
-                _onTime_removeCheckItems(false, checkedItemId);
+                _onTime_removeCheckItems(false, checkedItemId, checkContentAlreadyExist);
             }
         }
     }
