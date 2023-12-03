@@ -84,8 +84,10 @@ export const LocalSaveCtrl: FC<localSaveCtrlType> = memo(({ FirstRenderSignal, s
         <div className="localSaveInfos">
             {isCheckSaveData.length > 0 ?
                 <>
-                    <p>現在のお気に入りは「{currentCheckedItemLists().join(', ')}」です。</p>
-                    <p>新たに選択しているのは「{isCheckItems.join(', ')}」です。</p>
+                    <p>登録済みなのは「{currentCheckedItemLists().join(', ')}」です。</p>
+                    {isCheckItems.length > 0 &&
+                        <p>新たに選択しているのは「{isCheckItems.join(', ')}」です。</p>
+                    }
                 </> :
                 <p>現在のお気に入りは「{isCheckItems.join(', ')}」です。</p>
             }
