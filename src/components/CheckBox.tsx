@@ -66,7 +66,7 @@ export const CheckBox: FC<checkBoxType> = memo(({ index, imgNameSrc }) => {
             const targetIndex: number = isCheckItems.indexOf(find_checked_ItemId);
             const shallowCopy: string[] = [...isCheckItems];
             shallowCopy.splice(targetIndex, 1);
-            if (checkContentAlreadyExist.length <= 0) setCheckItems((_prevCheckItems) => [...shallowCopy]); // チェックしたコンテンツが未登録の場合は State 更新（登録作業に進める）
+            if (checkContentAlreadyExist.length <= 0) setCheckItems((_prevCheckItems) => [...shallowCopy]); // チェックしたコンテンツが登録済みの場合はコピーして splice 処理（当該IDコンテンツを削除）した配列（shallowCopy）で State 更新（登録作業に進める）
         } else {
             if (checkContentAlreadyExist.length <= 0) setCheckItems((_prevCheckItems) => [...isCheckItems, find_checked_ItemId]); // チェックしたコンテンツが未登録の場合は State 更新（登録作業に進める）
         }
