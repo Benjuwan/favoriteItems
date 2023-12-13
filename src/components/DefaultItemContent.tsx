@@ -1,18 +1,20 @@
-import { memo, useContext } from "react";
-import { ImgNameContext } from "../provider/ImgNameSrcContext";
+import { FC, memo } from "react";
 import { ItemContent } from "./ItemContent";
 import { CheckBox } from "./CheckBox";
+import { contentType } from "../ts/contentType";
 
-export const DefaultItemContent = memo(() => {
-    const { isImgNameSrc } = useContext(ImgNameContext);
+type defaultItemContentType = {
+    fetchContentData: contentType[];
+}
 
+export const DefaultItemContent: FC<defaultItemContentType> = memo(({ fetchContentData }) => {
     return (
         <div className="itemsWrapper defaultWrapper">
             <p id="explainTxt">各アイテムのラベルをクリックするとお気に入り登録できます。</p>
-            {isImgNameSrc.map((imgNameSrc, i) => (
+            {fetchContentData.map((fetchContenetEl, i) => (
                 <div className="items" key={i}>
-                    <ItemContent index={i} imgNameSrc={imgNameSrc} />
-                    <CheckBox index={i} imgNameSrc={imgNameSrc} />
+                    <ItemContent index={i} fetchContenetName={fetchContenetEl.contentName} />
+                    <CheckBox index={i} imgNameSrc={fetchContenetEl.contentName} />
                 </div>
             ))}
         </div>

@@ -1,17 +1,27 @@
-import { memo, useEffect, useContext, useState } from "react"
+import { Suspense, memo, useEffect, useContext, useState, useMemo } from "react"
 import styled from "styled-components";
+import useSWR from "swr";
+import { contentType } from "../ts/contentType";
 import { CheckItemsContext } from "../provider/CheckItemsContext";
 import { LocalSaveCtrl } from "./LocalSaveCtrl";
 import { FavoriteItemContent } from "./FavoriteItemContent";
 import { DefaultItemContent } from "./DefaultItemContent";
+import { LoadingEl } from "./LoadingEl";
 import { useCreateImgNameSrc } from "../hooks/useCreateImgNameSrc";
+import { useFetchData } from "../hooks/useFetchData";
 
-export const Items = memo(() => {
-    const dammy___txtForImgesAry = () => {
-        const txtElement = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
-        return txtElement.split(' ');
+/* Suspense の対象コンポーネント */
+const SuspenseItems = memo(() => {
+    const isHostingMode: boolean = false; // ホスティング時は true に変更
+    let fetchData: string = '';
+    if (isHostingMode) {
+        /* サブディレクトリ（/r0105/favoriteitems）を指定した ver */
+        fetchData = `${location.origin}/r0105/favoriteitems/json/contents.json`;
+    } else {
+        fetchData = `${location.origin}/public/json/contents.json`;
     }
 
+    /* 各種 Context */
     const { isCheckItems } = useContext(CheckItemsContext);
 
     /* 既存の localStorage データ State */
@@ -20,13 +30,13 @@ export const Items = memo(() => {
     /* 初回レンダリングの判定有無用の State */
     const [FirstRenderSignal, setFirstRenderSignal] = useState<boolean>(false);
 
+    /* 画像のソースパス名を生成 */
     const { createImgNameSrc } = useCreateImgNameSrc();
-    useEffect(() => {
-        /* dammy___txtForImgesAry メソッドを通じてダミー画像を生成 */
-        const imgFileNames: string[] = dammy___txtForImgesAry();
-        createImgNameSrc(15, imgFileNames);
-        // createImgNameSrc_alt(65); // 引数には用意した画像の枚数を指定
 
+    /* コンテンツデータを取得 */
+    const { FetchData } = useFetchData();
+
+    useEffect(() => {
         /* 既存の localStorage データを State に格納 */
         const getLocalStorageItems: string | null = localStorage.getItem('localSaveBoxes');
         if (getLocalStorageItems !== null) {
@@ -37,6 +47,22 @@ export const Items = memo(() => {
         setTimeout(() => window.scrollTo(0, 0), 500); // 疑似的な遅延・非同期処理で再読み込み時にスクロールトップする
     }, []);
 
+    /* コンテンツデータを取得して配列（getFetchContentData）に格納 */
+    const { data: fetchContents = [] } = useSWR(
+        /* 第1引数 key は 第2引数の fetcher 関数の引数として渡される */
+        fetchData,
+        (urlAsKey) => FetchData(urlAsKey),
+        {
+            suspense: true
+        }
+    );
+    const [getFetchContentData, setFetchContentData] = useState<contentType[]>([]);
+    useEffect(() => {
+        setFetchContentData((_prevgetFetchContentData) => fetchContents);
+        createImgNameSrc(fetchContentData);
+    }, [getFetchContentData]); // EffectHook：依存配列は取得したコンテンツデータを格納した配列
+    const fetchContentData: contentType[] = useMemo(() => getFetchContentData, [getFetchContentData]); // 変数のメモ化：依存配列は取得したコンテンツデータを格納した配列
+
     return (
         <ItemEls className="ItemEls">
             {(isCheckItems.length > 0 || isCheckSaveData.length > 0) &&
@@ -45,10 +71,19 @@ export const Items = memo(() => {
                     <FavoriteItemContent FirstRenderSignal={FirstRenderSignal} setFirstRenderSignal={setFirstRenderSignal} />
                 </>
             }
-            <DefaultItemContent />
+            <DefaultItemContent fetchContentData={fetchContentData} />
         </ItemEls>
     );
 });
+
+/* Suspense を実行するエクスポート用コンポーネント */
+export const Items = () => {
+    return (
+        <Suspense fallback={<LoadingEl />}>
+            <SuspenseItems />
+        </Suspense>
+    );
+}
 
 const ItemEls = styled.div`
 font-size: 1.4rem;
