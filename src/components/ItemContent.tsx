@@ -1,26 +1,28 @@
-import { memo, FC, ReactNode } from "react";
+import { memo, FC, ReactNode, useContext } from "react";
 import styled from "styled-components";
+import { ImgNameContext } from "../provider/ImgNameSrcContext";
 import { useViewDetails } from "../hooks/useViewDetails";
 
 type itemContentType = {
     index: number;
-    imgNameSrc?: string;
+    fetchContenetName?: string;
     children?: ReactNode;
 }
 
 export const ItemContent: FC<itemContentType> = memo(({
-    imgNameSrc,
+    fetchContenetName,
     index,
     children
 }) => {
-    const createImgNameSrc_alt: boolean = false; // 用意した画像を使用する場合は true に変更
+    const { isImgNameSrc } = useContext(ImgNameContext);
+
+    const isHostingMode: boolean = false; // ホスティング時は true に変更
     const setImgSrcPath = (imgNameSrc: string) => {
-        if (createImgNameSrc_alt) {
-            /* 本環境（デプロイ）時は /public を取る */
-            return `${location.origin}/public/imges/${imgNameSrc}.jpg`;
-            // return `${location.origin}/r0105/favoriteitems/imges/${imgNameSrc}.jpg`;
+        if (isHostingMode) {
+            /* サブディレクトリ（/r0105/favoriteitems）を指定した ver */
+            return `${location.origin}/r0105/favoriteitems/imges/${imgNameSrc}.jpg`;
         } else {
-            return `https://via.placeholder.com/640x360/333/fff?text=${imgNameSrc}`;
+            return `${location.origin}/public/imges/${imgNameSrc}.jpg`;
         }
     }
 
@@ -33,11 +35,11 @@ export const ItemContent: FC<itemContentType> = memo(({
         <ItemContents id={`items-${index + 1}`} className="itemContents" onClick={(itemEl) => {
             viewDetails(itemEl.currentTarget, 'OnView');
         }}>
-            <>{imgNameSrc ?
+            <>{fetchContenetName ?
                 <div className="itemsOrigin" id={`itemsOrigin-${index + 1}`}>
-                    <p className="thumbnails"><img src={setImgSrcPath(imgNameSrc)} alt={`itemsOrigin-${index + 1}：${imgNameSrc}の画像`} /></p>
+                    <p className="thumbnails"><img src={setImgSrcPath(isImgNameSrc[index])} alt={`itemsOrigin-${index + 1}：${fetchContenetName}の画像`} /></p>
                     <div className="hiddenArea">
-                        <img src={setImgSrcPath(imgNameSrc)} alt={`itemsOrigin-${index + 1}：${imgNameSrc}の画像`} />
+                        <img src={setImgSrcPath(isImgNameSrc[index])} alt={`itemsOrigin-${index + 1}：${fetchContenetName}の画像`} />
                     </div>
                 </div> :
                 <>{children}</>
