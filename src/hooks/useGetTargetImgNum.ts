@@ -5,7 +5,8 @@ export const useGetTargetImgNum = () => {
         item: string,
         prefix: string
     ) => {
-        const targetNumber = item.split('itemsOrigin-')[1].split('">')[0];
+        // console.log(item.split('itemsOrigin-')[1]);
+        const targetNumber = item.split('itemsOrigin-')[1].split('"')[0];
         return `${prefix}-${targetNumber}`;
     }
 

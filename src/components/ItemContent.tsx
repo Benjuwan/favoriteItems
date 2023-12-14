@@ -17,7 +17,9 @@ export const ItemContent: FC<itemContentType> = memo(({
     const { isImgNameSrc } = useContext(ImgNameContext);
 
     const isHostingMode: boolean = false; // ホスティング時は true に変更
-    const setImgSrcPath = (imgNameSrc: string) => {
+    const setImgSrcPath = (imgNameSrc: string | undefined) => {
+        if (imgNameSrc === undefined) return; // SWR の非同期処理で undefined.jpg （undefined の画像が一つ生まれてしまうので当該条件の場合は早期終了して処理をスキップ）
+
         if (isHostingMode) {
             /* サブディレクトリ（/r0105/favoriteitems）を指定した ver */
             return `${location.origin}/r0105/favoriteitems/imges/${imgNameSrc}.jpg`;
