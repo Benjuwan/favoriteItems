@@ -70,6 +70,9 @@ const LocalDataSaveBtn = styled.button`
     width: 4.4rem;
     height: 4.4rem;
     border-radius: 50%;
+    display: grid;
+    place-content: center;
+    line-height: 1;
     z-index: 9;
 
     @media screen and (min-width: 1025px) {

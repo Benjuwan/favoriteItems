@@ -9,6 +9,9 @@
 - コンテンツ情報と画像の用意<br />
 `public/json/contents.json`の`contents.json`がコンテンツ情報（コンテンツ名、画像のナンバリング、詳細情報、YouTube 動画）を記載したファイル（デフォルト65件）です。<br />親階層`public`の静的アセットディレクトリに`imges`ディレクトリと画像（※ 画像数は`contents.json`記載のコンテンツ数と同じに）を用意することで使用できます。
 
+- 画像ファイル名の調整<br />
+画像ファイル名はデフォルトでは`img-xxx`という表記です。必要に応じて以下の調整を行ってください。<br />調整箇所は、`public/json/contents.json`の`contentNumber`（画像ファイルのナンバリングを管理する数値）と、`ItemContent.tsx`の`imgSrc_Prefix`変数（ファイル名の接頭辞を指定する文字列）です。つまり、デフォルトの`img-xxx`は`img-（imgSrc_Prefix）`と`xxx（contentNumber）`が結合した形になります。
+
 - ホスティング時の注意<br />
 1：`Items.tsx`と`ItemContent.tsx`の`isHostingMode`変数を`true`に切り替える。<br />
 2：注意事項の項目に記載されている`vite.config.ts`の設定を変更。
