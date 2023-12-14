@@ -26,7 +26,7 @@ export const useSelectCheckedItems = () => {
     }
 
     /* 登録されている localStorage データを呼び出して、_selectCheckedItems メソッドに渡す処理 */
-    const inUseEffect_act_selectCheckedItems = () => {
+    const ActionSelectCheckedItems = () => {
         const getLocalStorageItems: string | null = localStorage.getItem('localSaveBoxes');
         if (getLocalStorageItems !== null) {
             const SaveDateItems: string[] = JSON.parse(getLocalStorageItems);
@@ -34,5 +34,5 @@ export const useSelectCheckedItems = () => {
         }
     }
 
-    return { inUseEffect_act_selectCheckedItems }
+    return { ActionSelectCheckedItems }
 }

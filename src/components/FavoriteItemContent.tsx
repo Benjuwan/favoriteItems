@@ -1,4 +1,4 @@
-import { memo, FC, useEffect, useContext, useState } from "react";
+import { memo, FC, useEffect, useState } from "react";
 import parse from 'html-react-parser';
 /**
  * 【html-react-parser】HTML文字列をReact要素に変換するツール
@@ -9,12 +9,12 @@ import parse from 'html-react-parser';
  * 参考サイト：https://www.engilaboo.com/react-html-parse/
 */
 
-import { ItemsContext } from "../provider/ItemsContext";
 import { ItemContent } from "./ItemContent";
 import { useSelectCheckedItems } from "../hooks/useSelectCheckedItems";
 import { useGetTargetImgNum } from "../hooks/useGetTargetImgNum";
 import { useRemoveItems } from "../hooks/useRemoveItems";
 import { useNolocalDataButChekedExist } from "../hooks/useNolocalDataButChekedExist";
+import { useGetCurrentLocalSaveData_DataSort } from "../hooks/useGetCurrentLocalSaveData_DataSort";
 
 type favoriteItemContentType = {
     FirstRenderSignal: boolean;
@@ -22,34 +22,22 @@ type favoriteItemContentType = {
 }
 
 export const FavoriteItemContent: FC<favoriteItemContentType> = memo(({ FirstRenderSignal, setFirstRenderSignal }) => {
-    const { isItems } = useContext(ItemsContext);
-
     const { GetTargetImgNum } = useGetTargetImgNum();
     const { RemoveItems } = useRemoveItems();
     const { _nolocalDataButChekedExist } = useNolocalDataButChekedExist();
-    const { inUseEffect_act_selectCheckedItems } = useSelectCheckedItems();
+    const { ActionSelectCheckedItems } = useSelectCheckedItems();
+    const { GetCurrentLocalSaveData_DataSort } = useGetCurrentLocalSaveData_DataSort();
 
     /* 既存の localStorage データを State に格納 */
     const [isCheckSaveData, setCheckSaveData] = useState<string[]>([]);
-    useEffect(() => {
-        const getLocalStorageItems: string | null = localStorage.getItem('localSaveBoxes');
-        if (getLocalStorageItems !== null) {
-            const SaveDateItems: string[] = JSON.parse(getLocalStorageItems);
-            /* localStroage データを（itemsOrigin- のナンバーで）ソート */
-            const SaveDataItemsSort: string[] = SaveDateItems.sort((aheadEl, behindEl) => {
-                const itemsOriginNum_Ahead = aheadEl.split('itemsOrigin-')[1].split('：')[0];
-                const itemsOriginNum_Behind = behindEl.split('itemsOrigin-')[1].split('：')[0];
-                return Number(itemsOriginNum_Ahead) - Number(itemsOriginNum_Behind);
-            })
-            setCheckSaveData((_prevCheckSaveData) => SaveDataItemsSort);
-        }
-    }, [isItems]);
+    /* 既存の localStorage データをソート（して isCheckSaveData に反映）*/
+    GetCurrentLocalSaveData_DataSort(setCheckSaveData);
 
     /* ラベルクリックによる登録コンテンツ削除で既存の localStorage データが空になった時の再登録処理（LocalSaveCtrl.tsx でも使用）*/
     useEffect(() => _nolocalDataButChekedExist(isCheckSaveData, FirstRenderSignal, setFirstRenderSignal), [isCheckSaveData]);
 
-    /* useSelectCheckedItems.ts：登録されている localStorage データを呼び出して、.defaultWrapper のコンテンツに反映する処理 */
-    useEffect(() => inUseEffect_act_selectCheckedItems(), []);
+    /* useSelectCheckedItems.ts：登録されている localStorage データを呼び出して、.defaultWrapper の登録済みコンテンツには特定のスタイルをあてる（見た目に反映させる）処理 */
+    useEffect(() => ActionSelectCheckedItems(), []);
 
     /* お気に入り解除したコンテンツと合致する一覧コンテンツから checkedContent クラスを削除 */
     const _removeClassName_CheckedContent = (btnEl: HTMLButtonElement) => {

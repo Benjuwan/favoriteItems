@@ -1,20 +1,30 @@
-import { memo, FC, ReactNode, useContext } from "react";
+import { memo, FC, ReactNode } from "react";
 import styled from "styled-components";
-import { ImgNameContext } from "../provider/ImgNameSrcContext";
+import parse from 'html-react-parser';
+/**
+ * 【html-react-parser】HTML文字列をReact要素に変換するツール
+ * https://www.npmjs.com/package/html-react-parser
+ * 
+ * npm i html-react-parser
+ * 
+ * 参考サイト：https://www.engilaboo.com/react-html-parse/
+*/
+
+import { contentType } from "../ts/contentType";
 import { useViewDetails } from "../hooks/useViewDetails";
 
 type itemContentType = {
     index: number;
-    fetchContenetName?: string;
+    fetchContenetEl?: contentType;
     children?: ReactNode;
 }
 
 export const ItemContent: FC<itemContentType> = memo(({
-    fetchContenetName,
     index,
+    fetchContenetEl,
     children
 }) => {
-    const { isImgNameSrc } = useContext(ImgNameContext);
+    const imgSrc_Prefix: string = 'img-'; // img 画像ファイル名の接頭辞
 
     const isHostingMode: boolean = false; // ホスティング時は true に変更
     const setImgSrcPath = (imgNameSrc: string | undefined) => {
@@ -28,6 +38,7 @@ export const ItemContent: FC<itemContentType> = memo(({
         }
     }
 
+    /* 画像クリックでのモーダル表示 */
     const { viewDetails } = useViewDetails();
 
     /**
@@ -37,11 +48,21 @@ export const ItemContent: FC<itemContentType> = memo(({
         <ItemContents id={`items-${index + 1}`} className="itemContents" onClick={(itemEl) => {
             viewDetails(itemEl.currentTarget, 'OnView');
         }}>
-            <>{fetchContenetName ?
+            <>{fetchContenetEl ?
                 <div className="itemsOrigin" id={`itemsOrigin-${index + 1}`}>
-                    <p className="thumbnails"><img src={setImgSrcPath(isImgNameSrc[index])} alt={`itemsOrigin-${index + 1}：${fetchContenetName}の画像`} /></p>
+                    <p className="thumbnails"><img src={setImgSrcPath(`${imgSrc_Prefix}${fetchContenetEl.contentNumber}`)} alt={`itemsOrigin-${index + 1}：${fetchContenetEl.contentName}の画像`} /></p>
                     <div className="hiddenArea">
-                        <img src={setImgSrcPath(isImgNameSrc[index])} alt={`itemsOrigin-${index + 1}：${fetchContenetName}の画像`} />
+                        <div className="hiddenAreaContent">
+                            <img src={setImgSrcPath(`${imgSrc_Prefix}${fetchContenetEl.contentNumber}`)} alt={`itemsOrigin-${index + 1}：${fetchContenetEl.contentName}の画像`} />
+                            {fetchContenetEl.contentDetails &&
+                                <div className="contentDetails">
+                                    <p>{fetchContenetEl.contentDetails}</p>
+                                </div>
+                            }
+                            {fetchContenetEl.contentMovie &&
+                                <div className="movieEls">{parse(fetchContenetEl.contentMovie)}</div>
+                            }
+                        </div>
                     </div>
                 </div> :
                 <>{children}</>
@@ -64,10 +85,34 @@ const ItemContents = styled.div`
         visibility: hidden;
         opacity: 0;
         transition: all .25s;
+        overflow-x: scroll;
         /* z-index: 9; */
 
-        & img {
-            width: clamp(160px, 100%, 640px);
+        & .hiddenAreaContent {
+            padding: 2em;
+            width: clamp(16rem, 100%, 64rem);
+            
+            @media screen and (min-width: 1025px) {
+                padding: 0;
+                width: clamp(640px, calc(100vw/2), 960px);
+            }
+
+            & .contentDetails {
+                line-height: 1.8;
+                padding: 1em;
+                background-color: #fff;
+                border-radius: 4px;
+                margin: 1em auto;
+            }
+
+            & .movieEls{
+                & iframe {
+                    width: 100%;
+                    height: auto;
+                    aspect-ratio: 16 / 9;
+                    margin: 1em auto;
+                }
+            }
         }
     }
 

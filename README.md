@@ -7,7 +7,7 @@
 `localstorage`を使ったお気に入りアイテム（画像）の登録機能<br />
 
 - コンテンツ情報と画像の用意<br />
-`public/json/contents.json`の`contents.json`がコンテンツ情報（コンテンツ名、画像のナンバリング、詳細情報）を記載したファイル（デフォルト65件）です。<br />親階層`public`の静的アセットディレクトリに`imges`ディレクトリと画像（※ 画像数は`contents.json`記載のコンテンツ数と同じに）を用意することで使用できます。
+`public/json/contents.json`の`contents.json`がコンテンツ情報（コンテンツ名、画像のナンバリング、詳細情報、YouTube 動画）を記載したファイル（デフォルト65件）です。<br />親階層`public`の静的アセットディレクトリに`imges`ディレクトリと画像（※ 画像数は`contents.json`記載のコンテンツ数と同じに）を用意することで使用できます。
 
 - ホスティング時の注意<br />
 1：`Items.tsx`と`ItemContent.tsx`の`isHostingMode`変数を`true`に切り替える。<br />
