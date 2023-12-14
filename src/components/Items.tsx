@@ -4,10 +4,10 @@ import useSWR from "swr"; // npm i swr
 import { contentType } from "../ts/contentType";
 import { CheckItemsContext } from "../provider/CheckItemsContext";
 import { LocalSaveCtrl } from "./LocalSaveCtrl";
+import { LocalSaveBtn } from "./LocalSaveBtn";
 import { FavoriteItemContent } from "./FavoriteItemContent";
 import { DefaultItemContent } from "./DefaultItemContent";
 import { LoadingEl } from "./LoadingEl";
-import { useCreateImgNameSrc } from "../hooks/useCreateImgNameSrc";
 import { useFetchData } from "../hooks/useFetchData";
 
 /* Suspense の対象コンポーネント */
@@ -29,9 +29,6 @@ const SuspenseItems = memo(() => {
 
     /* 初回レンダリングの判定有無用の State */
     const [FirstRenderSignal, setFirstRenderSignal] = useState<boolean>(false);
-
-    /* 画像のソースパス名を生成 */
-    const { createImgNameSrc } = useCreateImgNameSrc();
 
     /* コンテンツデータを取得 */
     const { FetchData } = useFetchData();
@@ -57,10 +54,7 @@ const SuspenseItems = memo(() => {
         }
     );
     const [getFetchContentData, setFetchContentData] = useState<contentType[]>([]);
-    useEffect(() => {
-        setFetchContentData((_prevgetFetchContentData) => fetchContents);
-        createImgNameSrc(fetchContentData);
-    }, [getFetchContentData]); // EffectHook：依存配列は取得したコンテンツデータを格納した配列
+    useEffect(() => setFetchContentData((_prevgetFetchContentData) => fetchContents), [getFetchContentData]); // EffectHook：依存配列は取得したコンテンツデータを格納した配列
     const fetchContentData: contentType[] = useMemo(() => getFetchContentData, [getFetchContentData]); // 変数のメモ化：依存配列は取得したコンテンツデータを格納した配列
 
     return (
@@ -69,6 +63,7 @@ const SuspenseItems = memo(() => {
                 <>
                     <LocalSaveCtrl FirstRenderSignal={FirstRenderSignal} setFirstRenderSignal={setFirstRenderSignal} />
                     <FavoriteItemContent FirstRenderSignal={FirstRenderSignal} setFirstRenderSignal={setFirstRenderSignal} />
+                    <LocalSaveBtn addFixed />
                 </>
             }
             <DefaultItemContent fetchContentData={fetchContentData} />
