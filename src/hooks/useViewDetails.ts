@@ -8,7 +8,7 @@ export const useViewDetails = () => {
         const movieEls: HTMLDivElement | null = itemContent.querySelector('.movieEls');
         if (movieEls !== null) {
             const targetIframe: HTMLIFrameElement | null | undefined = movieEls?.querySelector('iframe');
-            const targetIframeSrc = targetIframe?.getAttribute('src') as string;
+            const targetIframeSrc = targetIframe?.getAttribute('src') as string; // 型アサーション：型推論の上書き
             /* モーダル表示中の（コンテンツ内の）iframe の src 属性に同じ（src 属性の）内容：targetIframeSrc をセットする（セットし直して動画停止） */
             targetIframe?.setAttribute('src', targetIframeSrc);
         }
