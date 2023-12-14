@@ -1,6 +1,6 @@
 import { Suspense, memo, useEffect, useContext, useState, useMemo } from "react"
 import styled from "styled-components";
-import useSWR from "swr";
+import useSWR from "swr"; // npm i swr
 import { contentType } from "../ts/contentType";
 import { CheckItemsContext } from "../provider/CheckItemsContext";
 import { LocalSaveCtrl } from "./LocalSaveCtrl";
@@ -13,12 +13,12 @@ import { useFetchData } from "../hooks/useFetchData";
 /* Suspense の対象コンポーネント */
 const SuspenseItems = memo(() => {
     const isHostingMode: boolean = false; // ホスティング時は true に変更
-    let fetchData: string = '';
+    let fetchDataKey: string = '';
     if (isHostingMode) {
         /* サブディレクトリ（/r0105/favoriteitems）を指定した ver */
-        fetchData = `${location.origin}/r0105/favoriteitems/json/contents.json`;
+        fetchDataKey = `${location.origin}/r0105/favoriteitems/json/contents.json`;
     } else {
-        fetchData = `${location.origin}/public/json/contents.json`;
+        fetchDataKey = `${location.origin}/public/json/contents.json`;
     }
 
     /* 各種 Context */
@@ -50,7 +50,7 @@ const SuspenseItems = memo(() => {
     /* コンテンツデータを取得して配列（getFetchContentData）に格納 */
     const { data: fetchContents = [] } = useSWR(
         /* 第1引数 key は 第2引数の fetcher 関数の引数として渡される */
-        fetchData,
+        fetchDataKey,
         (urlAsKey) => FetchData(urlAsKey),
         {
             suspense: true
