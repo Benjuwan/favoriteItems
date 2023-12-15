@@ -89,6 +89,7 @@ const ItemContents = styled.div`
         /* z-index: 9; */
 
         & .hiddenAreaContent {
+            color: #333;
             padding: 2em;
             width: clamp(16rem, 100%, 64rem);
             
