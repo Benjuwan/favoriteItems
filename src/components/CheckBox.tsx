@@ -1,4 +1,5 @@
-import { memo, FC, ChangeEvent, useContext, useState, useEffect } from "react";
+import { memo, FC, ChangeEvent, useContext } from "react";
+import styled from "styled-components";
 import { CheckItemsContext } from "../provider/CheckItemsContext";
 import { useGetTargetImgNum } from "../hooks/useGetTargetImgNum";
 import { useRemoveItems } from "../hooks/useRemoveItems";
@@ -14,15 +15,10 @@ export const CheckBox: FC<checkBoxType> = memo(({ index, imgNameSrc }) => {
     const { GetTargetImgNum } = useGetTargetImgNum();
     const { RemoveItems } = useRemoveItems();
 
-    /* 既存の localStorage データを State に格納 */
-    const [isCheckSaveData, setCheckSaveData] = useState<string[]>([]);
-    useEffect(() => {
-        const getLocalStorageItems: string | null = localStorage.getItem('localSaveBoxes');
-        if (getLocalStorageItems !== null) {
-            const SaveDateItems: string[] = JSON.parse(getLocalStorageItems);
-            setCheckSaveData((_prevCheckSaveData) => SaveDateItems);
-        }
-    }, [isCheckItems]);
+    /* 登録済みコンテンツの【解除直後の登録】という処理を実現するための特例措置（effectHook や react 特有の再レンダリング処理の影響を受けない「let：再定義可能な変数」として（データの編集作業が行われた）localStorage データを取り回す）*/
+    let mutableLocalStorageData: string[] = [];
+    const getLocalStorageItems: string | null = localStorage.getItem('localSaveBoxes');
+    if (getLocalStorageItems !== null) mutableLocalStorageData = JSON.parse(getLocalStorageItems);
 
     /* 当該コンテンツの削除（及び localStorage への更新）*/
     const _removeItems = (inputEl: HTMLInputElement) => {
@@ -34,7 +30,7 @@ export const CheckBox: FC<checkBoxType> = memo(({ index, imgNameSrc }) => {
     /* お気に入り登録済み（localstorage データ内の）コンテンツの中身から【item-ナンバー】を（加工：GetTargetImgNum）取得し、クリックした input 要素の id属性と照合して陽性だった場合は localstorage データ及び表示画面から削除 */
     const _fetchContent_removeCheckedAttr_removeItems = (inputEl: HTMLInputElement) => {
         const targetInputEl_idAttr = inputEl.getAttribute('id') as string;
-        const getTargetItemNumbers = Array.from(isCheckSaveData).map(checkSaveDataItem => GetTargetImgNum(checkSaveDataItem, 'item').split('：')[0]);
+        const getTargetItemNumbers = Array.from(mutableLocalStorageData).map(checkSaveDataItem => GetTargetImgNum(checkSaveDataItem, 'item').split('：')[0]);
         getTargetItemNumbers.forEach(targetItemNumber => {
             /* if文が「targetItemNumber.match(targetInputEl_idAttr)」だと 10 や 11 を選択している時に 1 までもがマッチ対象となってしまって 1 を登録できなくなるので === で厳密に判定 */
             if (targetItemNumber === targetInputEl_idAttr) {
@@ -74,7 +70,7 @@ export const CheckBox: FC<checkBoxType> = memo(({ index, imgNameSrc }) => {
 
     /* 現在選択しているコンテンツを任意の文字列に加工したリストを生成し、さらに特定の文字列に加工したリストにして返す */
     const currentCheckedItemLists = () => {
-        return isCheckSaveData.map(checkSaveData => {
+        return mutableLocalStorageData.map(checkSaveData => {
             const getTargetStr: string = GetTargetImgNum(checkSaveData, 'item');
             return getTargetStr.split('：')[0];
         });
@@ -108,9 +104,47 @@ export const CheckBox: FC<checkBoxType> = memo(({ index, imgNameSrc }) => {
             }
         }
     }
+
     return (
-        <label htmlFor={`item-${index + 1}`} onChange={(labelEl: ChangeEvent<HTMLLabelElement>) => {
+        <LabelEls htmlFor={`item-${index + 1}`} onChange={(labelEl: ChangeEvent<HTMLLabelElement>) => {
             checkItems(labelEl.currentTarget);
-        }}><input id={`item-${index + 1}`} type="checkbox" />{`No.${index + 1}：${imgNameSrc}の画像`}</label>
+        }}>
+            <input id={`item-${index + 1}`} type="checkbox" />{`No.${index + 1}：${imgNameSrc}の画像`}
+        </LabelEls>
     );
 });
+
+
+const LabelEls = styled.label`
+cursor: pointer;
+line-height: 2;
+display: flex;
+align-items: center;
+
+&:hover {
+    color: #fa04d9;
+}
+
+& input[type="checkbox"] {
+    appearance: none;
+    border-radius: 0;
+    border: 1px solid transparent;
+    background-color: transparent;
+
+    &[checked] {
+        &::before{
+            content: "♥";
+            display: grid;
+            place-content: center;
+            color: #fa04d9;
+            font-size: 1.25em;
+            line-height: 1;
+            margin-right: .25em;
+            background-color: #f8baf0;
+            border-radius: 50%;
+            width: 1.25em;
+            height: 1.25em;
+        }
+    }
+}
+`

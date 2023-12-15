@@ -183,26 +183,6 @@ padding: 0 2.5em;
             }
         }
 
-        & label {
-            cursor: pointer;
-            line-height: 2;
-            
-            &:hover {
-                font-weight: bold;
-            }
-
-            & input[type="checkbox"] {
-                appearance: none;
-                border-radius: 0;
-                border: 1px solid transparent;
-                background-color: transparent;
-
-                &[checked] {
-                    appearance: auto;
-                }
-            }
-        }
-
         @media screen and (min-width: 700px) {
             width: 32%;
         }
