@@ -30,9 +30,25 @@ base: '/r0105/favoriteitems',
 - 本ファイルで使用している`localStorage`データ名は`localSaveBoxes`です。
 
 ## 調整不足 ~~（仕様）~~
-- チェックボックスの挙動<br />
-`React`の`state`管理ではなく、`JavaScript`の`setAttribute`,`removeAttribute`メソッドで`checked`の付与・解除を行っているせいか「実挙動と見た目で差異（1）」がある（1：お気に入り登録済みコンテンツのラベルクリックで削除後に、もう一度同じコンテンツを登録しようと **クリックした際にチェックマークが付かない**）<br />
-分かりづらい（UXが悪い）のでチェックマークをアイコンか何かに変更する予定？<br />取り急ぎ`Items.tsx`で`input`要素のスタイル（CSS）を調整して応急処置。
+- 2023/12/15 修正 ~~ チェックボックスの挙動 ~~<br />
+~~`React`の`state`管理ではなく、`JavaScript`の`setAttribute`,`removeAttribute`メソッドで`checked`の付与・解除を行っているせいか「実挙動と見た目で差異（1）」がある（1：お気に入り登録済みコンテンツのラベルクリックで削除後に、もう一度同じコンテンツを登録しようと **クリックした際にチェックマークが付かない**）<br />分かりづらい（UXが悪い）のでチェックマークをアイコンか何かに変更する予定？<br />取り急ぎ`Items.tsx`で`input`要素のスタイル（CSS）を調整して応急処置。~~
+ 
+```
+/* 修正前：effectHook と StateHook を用いた方法 */
+const [isCheckSaveData, setCheckSaveData] = useState<string[]>([]);
+useEffect(() => {
+    const getLocalStorageItems: string | null = localStorage.getItem('localSaveBoxes');
+    if (getLocalStorageItems !== null) {
+        const SaveDateItems: string[] = JSON.parse(getLocalStorageItems);
+        setCheckSaveData((_prevCheckSaveData) => SaveDateItems);
+    }
+}, [isCheckItems]);
+
+/* 修正後：let：再定義可能な変数として（データの編集作業が行われた）localStorage データを取り回す */
+let mutableLocalStorageData: string[] = [];
+const getLocalStorageItems: string | null = localStorage.getItem('localSaveBoxes');
+if (getLocalStorageItems !== null) mutableLocalStorageData = JSON.parse(getLocalStorageItems);
+```
 
 ## FixTo
 - 2023/12/01：対処 ~~削除と追加が同時に行えない（`localstorage`から削除した内容が更新時に復活してしまう）~~ <br />
