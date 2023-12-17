@@ -166,19 +166,25 @@ padding: 0 2.5em;
             background-color: #666666;
         }
 
-        & img {
-            display: block;
-        }
-
         & .thumbnails {
             overflow: hidden;
+            background-color: #fff;
+            box-shadow: 0 0 3px rgba(0,0,0,.5) inset;
+            padding: .25em;
+            height: 24rem;
+
+            @media screen and (min-width: 1025px) {
+                height: 240px;
+            }
 
             & img {
+                object-fit: contain;
+                height: 100%;
                 cursor: pointer;
                 transition: transform .25s;
                 
                 &:hover {
-                    transform: scale(1.1);
+                    transform: scale(1.15);
                 }
             }
         }

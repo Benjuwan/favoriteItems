@@ -12,6 +12,12 @@
 - 画像ファイル名の調整<br />
 画像ファイル名はデフォルトでは`img-xxx`という表記です。必要に応じて以下の調整を行ってください。<br />調整箇所は、`public/json/contents.json`の`contentNumber`（画像ファイルのナンバリングを管理する数値）と、`ItemContent.tsx`の`imgSrc_Prefix`変数（ファイル名の接頭辞を指定する文字列）です。つまり、デフォルトの`img-xxx`は`img-（imgSrc_Prefix）`と`xxx（contentNumber）`が結合した形になります。
 
+- 詳細情報（`contentDetails`）での`HTML`使用<br />
+[`html-react-parser`](https://www.npmjs.com/package/html-react-parser)を使用しているため`contents.json`内の`contentDetails`の値には`HTML`を使用できます。
+
+- YouTube 動画の掲載<br />
+`contents.json`内の`contentMovie`の値に`iframe`（YouTube 動画の`共有`から取得できる内容）を貼り付けてください。`width`属性・`height`属性は`CSS`で制御しているため削除し、各種属性値のダブルクォート（`""`）はシングルクォート（`''`）に変更してください。
+
 - ホスティング時の注意<br />
 1：`Items.tsx`と`ItemContent.tsx`の`isHostingMode`変数を`true`に切り替える。<br />
 2：注意事項の項目に記載されている`vite.config.ts`の設定を変更。
