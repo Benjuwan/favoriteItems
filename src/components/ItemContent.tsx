@@ -56,7 +56,7 @@ export const ItemContent: FC<itemContentType> = memo(({
                             <img src={setImgSrcPath(`${imgSrc_Prefix}${fetchContenetEl.contentNumber}`)} alt={`itemsOrigin-${index + 1}：${fetchContenetEl.contentName}の画像`} />
                             {fetchContenetEl.contentDetails &&
                                 <div className="contentDetails">
-                                    <p>{fetchContenetEl.contentDetails}</p>
+                                    {parse(fetchContenetEl.contentDetails)}
                                 </div>
                             }
                             {fetchContenetEl.contentMovie &&
@@ -91,11 +91,11 @@ const ItemContents = styled.div`
         & .hiddenAreaContent {
             color: #333;
             padding: 2em;
-            width: clamp(16rem, 100%, 64rem);
+            width: clamp(16rem, 100%, 56rem);
             
             @media screen and (min-width: 1025px) {
                 padding: 0;
-                width: clamp(640px, calc(100vw/2), 960px);
+                width: clamp(640px, calc(100vw/2), 560px);
             }
 
             & .contentDetails {
