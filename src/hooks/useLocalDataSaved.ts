@@ -16,7 +16,7 @@ export const useLocalDataSaved = () => {
     const { _returnTargetElsStr } = useReturnTargetElsStr();
 
     /* 任意の配列から特定のデータ（対象コンテンツのid）を取得して 当該コンテンツの中身（itemContent.innerHTML）を localstorage の配列に格納 */
-    const _getSpecificItems = (targetAry: string[]) => {
+    const _getSpecificItems: (targetAry: string[]) => void = (targetAry: string[]) => {
         const itemContents: NodeListOf<HTMLDivElement> = document.querySelectorAll('.itemsOrigin');
         targetAry.forEach(targetEl => {
             itemContents.forEach(itemContent => {
@@ -31,7 +31,7 @@ export const useLocalDataSaved = () => {
     }
 
     /* 既存の localStorage データの有無を確認して存在する場合は、チェックされているコンテンツの中身（itemsOriginContent）を localstorage の配列に格納及び localstorage を更新する */
-    const LocalDataSave = () => {
+    const LocalDataSave: () => void = () => {
         const getLocalStorageItems: string | null = localStorage.getItem('localSaveBoxes');
         if (getLocalStorageItems !== null) {
             const SaveDateItems: string[] = JSON.parse(getLocalStorageItems);

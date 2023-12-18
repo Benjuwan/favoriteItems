@@ -6,7 +6,7 @@ import { LocalStorageContext } from "../provider/LocalStorageContext";
 export const usePushLocalSaveBoxes = () => {
     const { localSaveBoxes } = useContext(LocalStorageContext);
 
-    const _pushLocalSaveBoxes = (specificEl: string | string[]) => {
+    const _pushLocalSaveBoxes: (specificEl: string | string[]) => void = (specificEl: string | string[]) => {
         if (typeof specificEl !== "string") {
             localSaveBoxes.push(...specificEl);
         } else {

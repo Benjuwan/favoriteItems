@@ -27,7 +27,7 @@ export const ItemContent: FC<itemContentType> = memo(({
     const imgSrc_Prefix: string = 'img-'; // img 画像ファイル名の接頭辞
 
     const isHostingMode: boolean = false; // ホスティング時は true に変更
-    const setImgSrcPath = (imgNameSrc: string | undefined) => {
+    const setImgSrcPath: (imgNameSrc: string | undefined) => string | undefined = (imgNameSrc: string | undefined) => {
         if (imgNameSrc === undefined) return; // SWR の非同期処理で undefined.jpg （undefined の画像が一つ生まれてしまうので当該条件の場合は早期終了して処理をスキップ）
 
         if (isHostingMode) {

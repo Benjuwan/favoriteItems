@@ -5,7 +5,7 @@ import { useLocalSaved } from "./useLocalSaved";
 export const useRemoveItems = () => {
     const { _localSaved } = useLocalSaved();
 
-    const RemoveItems = (
+    const RemoveItems: (item: string) => void = (
         item: string
     ) => {
         const getLocalStorageItems: string | null = localStorage.getItem('localSaveBoxes');

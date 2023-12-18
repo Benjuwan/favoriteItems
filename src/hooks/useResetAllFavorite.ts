@@ -8,7 +8,7 @@ export const useResetAllFavorite = () => {
     const { setItems } = useContext(ItemsContext);
     const { setCheckItems } = useContext(CheckItemsContext);
 
-    const ResetAllFavorite = () => {
+    const ResetAllFavorite: () => void = () => {
         const getLocalStorageItems = localStorage.getItem('localSaveBoxes');
         if (getLocalStorageItems !== null) localStorage.removeItem('localSaveBoxes');
         setItems((_prevItems) => []);
