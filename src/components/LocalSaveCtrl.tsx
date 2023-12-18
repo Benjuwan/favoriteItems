@@ -28,7 +28,7 @@ export const LocalSaveCtrl: FC<localSaveCtrlType> = memo(({ FirstRenderSignal, s
     useEffect(() => _nolocalDataButChekedExist(isCheckSaveData, FirstRenderSignal, setFirstRenderSignal), [isCheckSaveData]);
 
     /* 現在選択しているコンテンツを任意の文字列に加工したリストを生成 */
-    const currentCheckedItemLists = () => {
+    const currentCheckedItemLists: () => string[] = () => {
         return isCheckSaveData.map(checkSaveData => GetTargetImgNum(checkSaveData, 'items'));
     }
 

@@ -4,7 +4,7 @@ import { ItemsContext } from "../provider/ItemsContext";
 /* 既存の localStorage データをソートして引数で渡ってきた更新関数にセット（このカスタムフックを使用するコンポーネントで用意した「現在の localStorage データを活用する State 変数」に反映）*/
 
 export const useGetCurrentLocalSaveData_DataSort = () => {
-    const GetCurrentLocalSaveData_DataSort = (
+    const GetCurrentLocalSaveData_DataSort: (setCheckSaveData: React.Dispatch<React.SetStateAction<string[]>>) => void = (
         setCheckSaveData: React.Dispatch<React.SetStateAction<string[]>>
     ) => {
         const { isItems } = useContext(ItemsContext);

@@ -6,7 +6,7 @@ import { ItemsContext } from "../provider/ItemsContext";
 export const useLocalSaved = () => {
     const { setItems } = useContext(ItemsContext);
 
-    const _localSaved = (
+    const _localSaved: (localSaveStr: string, localSaveBoxes: string[]) => void = (
         localSaveStr: string,
         localSaveBoxes: string[]
     ) => {

@@ -40,7 +40,7 @@ export const FavoriteItemContent: FC<favoriteItemContentType> = memo(({ FirstRen
     useEffect(() => ActionSelectCheckedItems(), []);
 
     /* お気に入り解除したコンテンツと合致する一覧コンテンツから checkedContent クラスを削除 */
-    const _removeClassName_CheckedContent = (btnEl: HTMLButtonElement) => {
+    const _removeClassName_CheckedContent: (btnEl: HTMLButtonElement) => void = (btnEl: HTMLButtonElement) => {
         const removeItem_imgName: string | undefined | null = btnEl.closest('.favorites')?.querySelector('#itemName')?.textContent;
         const removeItem_targetImgName: string | undefined = removeItem_imgName?.split('：')[0];
         const defaultItems_checkedContents: NodeListOf<HTMLDivElement> = document.querySelectorAll('.defaultWrapper .checkedContent');

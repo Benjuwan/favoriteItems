@@ -23,7 +23,7 @@ export const LocalSaveBtn: FC<localSaveBtnType> = memo(({ addFixed }) => {
     GetCurrentLocalSaveData_DataSort(setCheckSaveData);
 
     /* 現在 localstorage データに存在する子（たち）と選択された追加の子（たち）の選定及び localstorage データにセット */
-    const _check_SelectedContents = () => {
+    const _check_SelectedContents: () => string[] | undefined = () => {
         const checkedContents: NodeListOf<HTMLElement> = document.querySelectorAll('[checked]');
         if (checkedContents.length > 0) {
             /* _returnTargetElsStr：条件に一致する複数要素が持つ「任意の子要素の中身（.itemsOrigin の中身）」を文字列として取得 */
@@ -34,7 +34,7 @@ export const LocalSaveBtn: FC<localSaveBtnType> = memo(({ addFixed }) => {
         }
     }
 
-    const _setLocalStorage_Favorite = () => {
+    const _setLocalStorage_Favorite: () => void = () => {
         const getTargetItems = _check_SelectedContents();
         if (getTargetItems !== undefined) {
             _pushLocalSaveBoxes(getTargetItems);
@@ -43,7 +43,7 @@ export const LocalSaveBtn: FC<localSaveBtnType> = memo(({ addFixed }) => {
     }
 
     /* 既存の localStorage データの有無により「お気に入り登録・表示」ボタンクリック時の挙動を変更 */
-    const localDataSave_Favorite = () => {
+    const localDataSave_Favorite: () => void = () => {
         if (isCheckSaveData.length > 0) {
             /* localStorage データがある場合は checked = 'true' の内容のみ localStorage に保存 */
             _setLocalStorage_Favorite();

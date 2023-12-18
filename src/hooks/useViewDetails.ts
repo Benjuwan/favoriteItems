@@ -2,7 +2,7 @@
 
 export const useViewDetails = () => {
     /* モーダル表示オフで、YouTube 動画リセット */
-    const _modalOff_resetIframeSrc = (
+    const _modalOff_resetIframeSrc: (itemContent: HTMLDivElement | HTMLElement) => void = (
         itemContent: HTMLDivElement | HTMLElement
     ) => {
         const movieEls: HTMLDivElement | null = itemContent.querySelector('.movieEls');
@@ -14,7 +14,7 @@ export const useViewDetails = () => {
         }
     }
 
-    const viewDetails = (
+    const viewDetails: (itemContent: HTMLDivElement | HTMLElement, className: string) => void = (
         itemContent: HTMLDivElement | HTMLElement,
         className: string
     ) => {

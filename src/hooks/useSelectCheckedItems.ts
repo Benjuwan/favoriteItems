@@ -5,7 +5,7 @@ import { useGetTargetImgNum } from "./useGetTargetImgNum";
 export const useSelectCheckedItems = () => {
     const { GetTargetImgNum } = useGetTargetImgNum();
 
-    const _selectCheckedItems = (SaveDateItems: string[]) => {
+    const _selectCheckedItems: (SaveDateItems: string[]) => void = (SaveDateItems: string[]) => {
         /* 登録済みのコンテンツから任意の文字列を抽出したリストを生成 */
         const shallowCopy: string[] = [...SaveDateItems];
         const selectCheckedItems = shallowCopy.map(SaveDateItem => {
@@ -18,7 +18,7 @@ export const useSelectCheckedItems = () => {
         items.forEach(item => {
             item.classList.remove('checkedContent'); // 初期化（checkedContent クラスを削除）
             const itemImgAltTxt: string | null | undefined = item.querySelector('img')?.getAttribute('alt');
-            
+
             selectCheckedItems.forEach(selectCheckedItem => {
                 if (itemImgAltTxt === selectCheckedItem) item.classList.add('checkedContent'); // 選択されたコンテンツにシグナル用の class を付与
             });
@@ -26,7 +26,7 @@ export const useSelectCheckedItems = () => {
     }
 
     /* 登録されている localStorage データを呼び出して、_selectCheckedItems メソッドに渡す処理 */
-    const ActionSelectCheckedItems = () => {
+    const ActionSelectCheckedItems: () => void = () => {
         const getLocalStorageItems: string | null = localStorage.getItem('localSaveBoxes');
         if (getLocalStorageItems !== null) {
             const SaveDateItems: string[] = JSON.parse(getLocalStorageItems);
