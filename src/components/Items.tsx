@@ -3,6 +3,7 @@ import styled from "styled-components";
 import useSWR from "swr"; // npm i swr
 import { contentType } from "../ts/contentType";
 import { CheckItemsContext } from "../provider/CheckItemsContext";
+import { FirtsViewArea } from "./FirtsViewArea";
 import { LocalSaveCtrl } from "./LocalSaveCtrl";
 import { LocalSaveBtn } from "./LocalSaveBtn";
 import { FavoriteItemContent } from "./FavoriteItemContent";
@@ -59,6 +60,7 @@ const SuspenseItems = memo(() => {
 
     return (
         <ItemEls className="ItemEls">
+            <FirtsViewArea />
             {(isCheckItems.length > 0 || isCheckSaveData.length > 0) &&
                 <>
                     <LocalSaveCtrl FirstRenderSignal={FirstRenderSignal} setFirstRenderSignal={setFirstRenderSignal} />
