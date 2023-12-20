@@ -1,10 +1,11 @@
-import { FC, memo, useState } from "react";
+import { FC, memo, useEffect, useState } from "react";
 import { useLocalDataSaved } from "../hooks/useLocalDataSaved";
 import { usePushLocalSaveBoxes } from "../hooks/usePushLocalSaveBoxes";
 import { useLocalSaved } from "../hooks/useLocalSaved";
 import { useReturnTargetElsStr } from "../hooks/useReturnTargetElsStr";
 import styled from "styled-components";
 import { useGetCurrentLocalSaveData_DataSort } from "../hooks/useGetCurrentLocalSaveData_DataSort";
+import { useInterSecObs } from "../hooks/useInterSecObs";
 
 type localSaveBtnType = {
     addFixed?: boolean;
@@ -16,6 +17,16 @@ export const LocalSaveBtn: FC<localSaveBtnType> = memo(({ addFixed }) => {
     const { _localSaved } = useLocalSaved();
     const { _returnTargetElsStr } = useReturnTargetElsStr();
     const { GetCurrentLocalSaveData_DataSort } = useGetCurrentLocalSaveData_DataSort();
+    const { InterSecObs } = useInterSecObs();
+
+    /* 追従式（addFixed === true）の場合のみ interSectionObserver の効果を付与 */
+    useEffect(() => {
+        if (addFixed) {
+            InterSecObs('.addFixed', 'addInterSecObs', {
+                rootMargin: '-50px 0px'
+            }, '.defaultWrapper');
+        }
+    }, []);
 
     /* 既存の localStorage データを State に格納 */
     const [isCheckSaveData, setCheckSaveData] = useState<string[]>([]);
@@ -74,6 +85,16 @@ const LocalDataSaveBtn = styled.button`
     place-content: center;
     line-height: 1;
     z-index: 9;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(1em);
+    transition: opacity .25s, visibility .25s, transform .75s;
+
+    &.addInterSecObs{
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(0);
+    }
 
     @media screen and (min-width: 1025px) {
         width: 44px;
