@@ -34,6 +34,12 @@ const SuspenseItems = memo(() => {
     /* コンテンツデータを取得 */
     const { FetchData } = useFetchData();
 
+    const fetchDataByclient = async () => {
+        const response = await fetch(`${location.origin}/public/json/contents.json`, { cache: "no-store" });
+        const resObj: contentType[] = await response.json();
+        return resObj;
+    }
+
     useEffect(() => {
         /* 既存の localStorage データを State に格納 */
         const getLocalStorageItems: string | null = localStorage.getItem('localSaveBoxes');
@@ -43,6 +49,12 @@ const SuspenseItems = memo(() => {
         }
 
         setTimeout(() => window.scrollTo(0, 0), 500); // 疑似的な遅延・非同期処理で再読み込み時にスクロールトップする
+
+        const fetchData = fetchDataByclient();
+        console.log(fetchData);
+        fetchData.then((data) => {
+            console.log(data);
+        });
     }, []);
 
     /* コンテンツデータを取得して配列（getFetchContentData）に格納 */
